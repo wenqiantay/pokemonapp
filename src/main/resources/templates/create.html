@@ -13,6 +13,27 @@
     <form method="POST" action="/create" data-th-object="${user}">
         <table>
             <tr>
+                <td>Full Name:</td>
+                <td>
+                    <input type="text" data-th-field="*{fullname}">
+                </td>
+                <td>
+                    <p data-th-if="${#fields.hasErrors('fullname')}"
+                        data-th-errors="*{fullname}"
+                        data-th-errorclass="error"></p>
+                </td>
+            </tr>
+            <tr>
+                <td>Gender:</td>
+                <td>
+                    <select data-th-field="*{gender}">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="others">Others</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <td>Username:</td>
                 <td>
                     <input type="text" data-th-field="*{username}">

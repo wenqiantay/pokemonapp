@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 
 public class User {
     
-    @NotNull(message="Required field")
+    @NotNull
     @Size(min=2, max=100, message="Username must be between 2 and 100 characters.")
     private String username;
 
@@ -20,6 +20,12 @@ public class User {
     @NotEmpty(message="Required field")
     @Email(message="Enter email in the correct format")
     private String email;
+
+    @NotNull(message="Required field")
+    private String fullname;
+
+    @NotNull(message="Please choose your gender")
+    private String gender;
 
     public String getUsername() {
         return username;
@@ -40,10 +46,23 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
+    public String getFullname() {
+        return fullname;
+    }
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+    public String getGender() {
+        return gender;
+    }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
     @Override
     public String toString() {
-        return "User [username=" + username + ", password=" + password + "]";
+        return "User [username=" + username + ", password=" + password + ", email=" + email + "]";
     }
+    
     
 }

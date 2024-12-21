@@ -7,18 +7,29 @@
 </head>
 <body>
     <h1>Login to your account</h1>
-    <form>
+    <form method="POST" action="/login" data-th-object="${user}">
         <table>
             <tr>
                 <td>Username:</td>
                 <td>
-                    <input type="text" name="username">
+                    <input type="text" name="username" data-th-field="*{username}">
+                </td>
+                <td>
+                    <p th:if="${#fields.hasErrors('username')}" 
+                       th:errors="*{username}" 
+                       class="error"></p>
                 </td>
             </tr>
             <tr>
             <td>Password:</td>
             <td>
-                <input type="password" name="password">
+                <input type="password" name="password" data-th-field="*{password}">
+            </td>
+            <td>
+                <p data-th-if="${#fields.hasErrors('password')}"
+                    data-th-errors="*{password}"
+                    data-th-errorclass="error"></p>
+
             </td>
             </tr>
             <tr>
