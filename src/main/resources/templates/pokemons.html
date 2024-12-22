@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Pokemons</title>
+</head>
+<body>
+    <h1> Kanto Pokemon List</h1>
+
+    <div class="pokemon-grid">
+        <div data-th-each="pokemon: ${pokemonlist}" class="pokemon-card">
+            <img data-th-src="${pokemon.sprite}" alt="Sprite of ${pokemon.name}" class="pokemon-img">
+            <div class="pokemon-name" data-th-text="${pokemon.name}"></div>
+        </div>
+    </div>   
+</body>
+</html>

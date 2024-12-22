@@ -1,6 +1,7 @@
 package vttp.ssf.miniproj.pokemonapp.repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
 
 @Repository
@@ -17,6 +19,9 @@ public class RedisRepo {
     
     @Autowired@Qualifier("redis-0")
     RedisTemplate<String, String> redisTemplate;
+
+    @Autowired@Qualifier("redis-pokemon")
+    RedisTemplate<String, Object> redisTemplatePokemon;
 
     //hset id username fred
     public void insertUser(User user) {
@@ -50,7 +55,7 @@ public class RedisRepo {
     public User getUser(String username, String password){
 
         if (username == null || username.trim().isEmpty()) {
-            
+
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
 
@@ -75,11 +80,26 @@ public class RedisRepo {
             return null; 
         }
 
-
         return user;
+    }
 
+    //set pokemon pokemonlist
+    public void savePokemonDatas(String key, List<Pokemon> pokemonList){
 
+        redisTemplatePokemon.opsForValue().set(key, pokemonList);
 
+    }
+
+    //exists pokemons
+    public boolean pokemonlistExists(String key){
+        return redisTemplatePokemon.hasKey(key);
+    }
+
+    //get pokemons
+    @SuppressWarnings("unchecked")
+    public List<Pokemon> getPokemonList(String key){
+
+       return (List<Pokemon>) redisTemplatePokemon.opsForValue().get(key);
     }
 
 

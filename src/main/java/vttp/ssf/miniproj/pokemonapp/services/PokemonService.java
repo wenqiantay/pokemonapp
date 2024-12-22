@@ -6,6 +6,7 @@ import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +18,41 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
+import vttp.ssf.miniproj.pokemonapp.repository.RedisRepo;
 
 @Service
 public class PokemonService {
 
-    private String POKE_API_151 = "https://pokeapi.co/api/v2/pokemon?limit=151";
+    @Autowired
+    RedisRepo redisRepo;
 
-    public List<Pokemon> getPokemons(){
+    private String POKE_API_151 = "https://pokeapi.co/api/v2/pokemon?limit=151";
+    private String POKEMON_KEY = "pokemons";
+
+    public List<Pokemon> getPokemonList(){
         
         List<Pokemon> pokemonList = new LinkedList<>();
+
+        if(redisRepo.pokemonlistExists(POKEMON_KEY)){
+
+            pokemonList = (List<Pokemon>)redisRepo.getPokemonList(POKEMON_KEY);
+
+            return pokemonList;
+            
+        }
+
+        pokemonList = getPokemonsdata();
+
+        redisRepo.savePokemonDatas(POKEMON_KEY, pokemonList);
+
+        return pokemonList;
+
+    }
+
+    public List<Pokemon> getPokemonsdata(){
         
+        List<Pokemon> pokemonList = new LinkedList<>();
+
         RequestEntity<Void> req = RequestEntity
                                     .get(POKE_API_151)
                                     .accept(MediaType.APPLICATION_JSON)
