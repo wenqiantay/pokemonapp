@@ -19,7 +19,7 @@ import vttp.ssf.miniproj.pokemonapp.services.RedisService;
 
 @Controller
 @RequestMapping
-public class PokemonController {
+public class AccountController {
 
     @Autowired
     RedisService redisSvc;
@@ -109,7 +109,6 @@ public class PokemonController {
         model.addAttribute("user", retrievedUser);
         model.addAttribute("username", user.getUsername());
 
-        System.out.println("Redirecting to main....");
         return "main";
     }
     
