@@ -15,17 +15,29 @@
         <img data-th-src="*{pokemon.sprite}">
     </div>
     <div>
-        <form method="POST" data-th-action="@{/catch-pokemon/{username}(username=${username})}">
-            <input type="hidden" th:value="${pokemon.name}" name="name"/>
-            <input type="hidden" th:value="${pokemon.sprite}" name="sprite"/>
-            <button type="submit">Catch</button>
-        </form>
+        <table>
+            <tr>
+            <td>
+                <form method="POST" data-th-action="@{/catch-pokemon/{username}(username=${username})}">
+                    <input type="hidden" data-th-value="${pokemon.name}" name="name"/>
+                     <input type="hidden" data-th-value="${pokemon.sprite}" name="sprite"/>
+                     <button type="submit">Catch</button>
+                </form>
+            </td>
+            <td>
+                <form method="POST" data-th-action="@{/run/{username}(username=${username})}">
+                    <input type="hidden" data-th-value="${pokemon.name}" name="name"/>
+                     <input type="hidden" data-th-value="${pokemon.sprite}" name="sprite"/>
+                     <button type="submit">Run</button>
+                </form>
+            </td>
+        </tr>
+        </table>
     </div>
 
     <div>
-        <span data-th-if="${message}"></span>
-        <p data-th-text="${message}"></p>
+        <p th:if="${message}" th:text="${message}"></p>
     </div>
-    
+
 </body>
 </html>

@@ -44,6 +44,7 @@ public class RedisRepo {
         values.put("email", user.getEmail());
         values.put("fullname", user.getFullname());
         values.put("gender", user.getGender());
+        values.put("rerollcount", String.valueOf(user.getRerollCounter()));
         
         if (user.getLastCatchDate() != null) {
             values.put("lastcatchdate", user.getLastCatchDate().toString());
@@ -52,17 +53,27 @@ public class RedisRepo {
 
             values.put("lastcatchdate", "");
         }
-        
+
+        if (user.getLastRerollDate() != null) {
+
+            values.put("lastrerolldate", user.getLastRerollDate().toString());
+
+        } else {
+
+            values.put("lastrerolldate", "");
+        }
+    
         try {
        
             String pokemonListJson = objectMapper.writeValueAsString(user.getMyPokemonList());
             values.put("pokemonlist", pokemonListJson);
 
+            String currentPokemonJson = objectMapper.writeValueAsString(user.getCurrentPokemon());
+            values.put("currentpokemon", currentPokemonJson);
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-
 
         hashOps.putAll(user.getUsername(), values);
 
@@ -100,11 +111,23 @@ public class RedisRepo {
 
         String lastCatchDateString = hashOps.get(username, "lastcatchdate");
 
-        if (lastCatchDateString != null) {
+        if (lastCatchDateString != null && !lastCatchDateString.isEmpty()) {
             user.setLastCatchDate(LocalDate.parse(lastCatchDateString));
         }
         else {
             user.setLastCatchDate(null); 
+        }
+
+        String lastRerollDateStr = hashOps.get(username, "lastrerolldate");
+        
+        if (lastRerollDateStr != null && !lastRerollDateStr.isEmpty()) {
+            user.setLastRerollDate(LocalDate.parse(lastRerollDateStr));
+        }
+
+        String rerollCountStr = hashOps.get(username, "rerollcount");
+
+        if (rerollCountStr != null) {
+            user.setRerollCounter(Integer.parseInt(rerollCountStr));
         }
 
         String pokemonListString = hashOps.get(username, "pokemonlist");
@@ -121,13 +144,21 @@ public class RedisRepo {
             }
         }
 
-        
+        String currentPokemonJson = hashOps.get(username, "currentpokemon");
+            if (currentPokemonJson != null && !currentPokemonJson.isEmpty()) {
+            try {
+                Pokemon currentPokemon = objectMapper.readValue(currentPokemonJson, Pokemon.class);
+                user.setCurrentPokemon(currentPokemon);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
         if (user.getUsername() == null) {
            
             return null; 
         }
 
-        
         if (!user.getPassword().equals(password)) {
             
             return null; 
@@ -154,11 +185,23 @@ public class RedisRepo {
 
         String lastCatchDateString = hashOps.get(username, "lastcatchdate");
 
-        if (lastCatchDateString != null) {
+        if (lastCatchDateString != null && !lastCatchDateString.isEmpty()) {
             user.setLastCatchDate(LocalDate.parse(lastCatchDateString));
         }
         else {
             user.setLastCatchDate(null); 
+        }
+
+        String lastRerollDateStr = hashOps.get(username, "lastrerolldate");
+        
+        if (lastRerollDateStr != null && !lastRerollDateStr.isEmpty()) {
+            user.setLastRerollDate(LocalDate.parse(lastRerollDateStr));
+        }
+
+        String rerollCountStr = hashOps.get(username, "rerollcount");
+
+        if (rerollCountStr != null) {
+            user.setRerollCounter(Integer.parseInt(rerollCountStr));
         }
 
         String pokemonListString = hashOps.get(username, "pokemonlist");
@@ -174,6 +217,16 @@ public class RedisRepo {
 
             }
         }
+
+        String currentPokemonJson = hashOps.get(username, "currentpokemon");
+         if (currentPokemonJson != null && !currentPokemonJson.isEmpty()) {
+        try {
+            Pokemon currentPokemon = objectMapper.readValue(currentPokemonJson, Pokemon.class);
+            user.setCurrentPokemon(currentPokemon);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
         return user;
     }

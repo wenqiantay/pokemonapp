@@ -34,6 +34,19 @@ public class User {
 
     private LocalDate lastCatchDate;
 
+    private int rerollCounter;
+    private LocalDate lastRerollDate;
+
+    private Pokemon currentPokemon;
+
+    public Pokemon getCurrentPokemon() {
+        return currentPokemon;
+    }
+
+    public void setCurrentPokemon(Pokemon currentPokemon) {
+        this.currentPokemon = currentPokemon;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -77,11 +90,26 @@ public class User {
     public void setLastCatchDate(LocalDate lastCatchDate) {
         this.lastCatchDate = lastCatchDate;
     }
-    
+    public int getRerollCounter() {
+        return rerollCounter;
+    }
+    public void setRerollCounter(int rerollCounter) {
+        this.rerollCounter = rerollCounter;
+    }
+    public LocalDate getLastRerollDate() {
+        return lastRerollDate;
+    }
+    public void setLastRerollDate(LocalDate lastRerollDate) {
+        this.lastRerollDate = lastRerollDate;
+    }
+
     @Override
     public String toString() {
         return "User [username=" + username + ", password=" + password + ", email=" + email + ", fullname=" + fullname
-                + ", gender=" + gender + ", myPokemonList=" + myPokemonList + ", lastCatchDate=" + lastCatchDate + "]";
+                + ", gender=" + gender + ", myPokemonList=" + myPokemonList + ", lastCatchDate=" + lastCatchDate
+                + ", rerollCounter=" + rerollCounter + ", lastRerollDate=" + lastRerollDate + "]";
     }
+
+   
     
 }
