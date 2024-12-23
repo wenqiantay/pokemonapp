@@ -1,10 +1,11 @@
 package vttp.ssf.miniproj.pokemonapp.controllers;
 
+import java.time.LocalDate;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
@@ -62,20 +63,29 @@ public class PokemonController {
     @PostMapping("/catch-pokemon/{username}")
     public String catchPokemon(@PathVariable String username, @ModelAttribute("pokemon") Pokemon pokemon, Model model){
 
-        //need to have a getCurrentUser method
         User user = redisSvc.getUserByUsername(username);
 
-        if (user != null) {
+        if (user == null) {
+            model.addAttribute("message", "You need to log in to catch Pokémon.");
+            return "redirect:/login";
+        }
 
-            // Call the service to save the caught Pokémon to the user's list
+        LocalDate today = LocalDate.now();
+
+        if (user.getLastCatchDate() != null && user.getLastCatchDate().isEqual(today)) {
+            model.addAttribute("message", "You can only catch one Pokémon per day.");
+            return "game"; 
+        }
+
             pokemonSvc.saveCaughtPokemon(pokemon, user);
+
+            user.setLastCatchDate(today);
+            redisSvc.insertUser(user);
+
             model.addAttribute("pokemon", pokemon);
             model.addAttribute("message", "You caught the Pokémon!");
 
-        } else {
-            model.addAttribute("message", "You need to log in to catch Pokémon.");
-        }
-
+        
         return "redirect:/game/{username}";
     }
 

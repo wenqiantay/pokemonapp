@@ -40,6 +40,7 @@ public class RedisService {
     public User getUserByUsername(String username){
 
         return redisRepo.getUsername(username);
+
     }
 
 

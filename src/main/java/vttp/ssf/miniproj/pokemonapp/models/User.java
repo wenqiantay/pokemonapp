@@ -1,5 +1,6 @@
 package vttp.ssf.miniproj.pokemonapp.models;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.validation.constraints.Email;
@@ -31,6 +32,8 @@ public class User {
 
     private List<Pokemon> myPokemonList;
 
+    private LocalDate lastCatchDate;
+
     public String getUsername() {
         return username;
     }
@@ -43,7 +46,7 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public String getEmail() {
         return email;
     }
@@ -68,12 +71,17 @@ public class User {
     public void setMyPokemonList(List<Pokemon> myPokemonList) {
         this.myPokemonList = myPokemonList;
     }
-
+    public LocalDate getLastCatchDate() {
+        return lastCatchDate;
+    }
+    public void setLastCatchDate(LocalDate lastCatchDate) {
+        this.lastCatchDate = lastCatchDate;
+    }
+    
     @Override
     public String toString() {
         return "User [username=" + username + ", password=" + password + ", email=" + email + ", fullname=" + fullname
-                + ", gender=" + gender + ", myPokemonList=" + myPokemonList + "]";
+                + ", gender=" + gender + ", myPokemonList=" + myPokemonList + ", lastCatchDate=" + lastCatchDate + "]";
     }
-   
     
 }

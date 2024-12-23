@@ -1,6 +1,7 @@
 package vttp.ssf.miniproj.pokemonapp.repository;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,14 @@ public class RedisRepo {
         values.put("email", user.getEmail());
         values.put("fullname", user.getFullname());
         values.put("gender", user.getGender());
+        
+        if (user.getLastCatchDate() != null) {
+            values.put("lastcatchdate", user.getLastCatchDate().toString());
+
+        } else {
+
+            values.put("lastcatchdate", "");
+        }
         
         try {
        
@@ -89,6 +98,15 @@ public class RedisRepo {
         user.setUsername(hashOps.get(username, "username"));
         user.setPassword(hashOps.get(username, "password"));
 
+        String lastCatchDateString = hashOps.get(username, "lastcatchdate");
+
+        if (lastCatchDateString != null) {
+            user.setLastCatchDate(LocalDate.parse(lastCatchDateString));
+        }
+        else {
+            user.setLastCatchDate(null); 
+        }
+
         String pokemonListString = hashOps.get(username, "pokemonlist");
         if (pokemonListString != null && !pokemonListString.isEmpty()) {
             try {
@@ -133,6 +151,15 @@ public class RedisRepo {
         user.setEmail(userMap.get("email"));
         user.setFullname(userMap.get("fullname"));
         user.setGender(userMap.get("gender"));
+
+        String lastCatchDateString = hashOps.get(username, "lastcatchdate");
+
+        if (lastCatchDateString != null) {
+            user.setLastCatchDate(LocalDate.parse(lastCatchDateString));
+        }
+        else {
+            user.setLastCatchDate(null); 
+        }
 
         String pokemonListString = hashOps.get(username, "pokemonlist");
         if (pokemonListString != null && !pokemonListString.isEmpty()) {
