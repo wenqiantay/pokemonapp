@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+</head>
+<body>
+    <h1>Welcome <span data-th-text="${username}"></span></h1>
+    <h1>Pokemon for the day</h1>
+    <div data-th-obj="${pokemon}">
+        <h2><span data-th-text="*{pokemon.name}"></span></h2>
+    </div>
+    <div>
+        <img data-th-src="*{pokemon.sprite}">
+    </div>
+    <div>
+        <form method="POST" data-th-action="@{/catch-pokemon/{username}(username=${username})}">
+            <input type="hidden" th:value="${pokemon.name}" name="name"/>
+            <input type="hidden" th:value="${pokemon.sprite}" name="sprite"/>
+            <button type="submit">Catch</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package vttp.ssf.miniproj.pokemonapp.repository;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
@@ -23,6 +28,10 @@ public class RedisRepo {
     @Autowired@Qualifier("redis-pokemon")
     RedisTemplate<String, Object> redisTemplatePokemon;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+
     //hset id username fred
     public void insertUser(User user) {
         
@@ -34,6 +43,18 @@ public class RedisRepo {
         values.put("email", user.getEmail());
         values.put("fullname", user.getFullname());
         values.put("gender", user.getGender());
+        
+        try {
+       
+            String pokemonListJson = objectMapper.writeValueAsString(user.getMyPokemonList());
+            values.put("pokemonlist", pokemonListJson);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
+
         hashOps.putAll(user.getUsername(), values);
 
         redisTemplate.opsForValue().set("uniqueusername" + user.getUsername(), user.getFullname());
@@ -68,6 +89,20 @@ public class RedisRepo {
         user.setUsername(hashOps.get(username, "username"));
         user.setPassword(hashOps.get(username, "password"));
 
+        String pokemonListString = hashOps.get(username, "pokemonlist");
+        if (pokemonListString != null && !pokemonListString.isEmpty()) {
+            try {
+               
+                List<Pokemon> pokemonList = objectMapper.readValue(pokemonListString, new TypeReference<List<Pokemon>>(){});
+                user.setMyPokemonList(pokemonList);
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+
+            }
+        }
+
         
         if (user.getUsername() == null) {
            
@@ -78,6 +113,39 @@ public class RedisRepo {
         if (!user.getPassword().equals(password)) {
             
             return null; 
+        }
+
+        return user;
+    }
+
+    public User getUsername(String username){
+
+        HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
+        Map<String, String> userMap = hashOps.entries(username);
+
+        if(userMap.isEmpty()){
+            return null;
+        }
+
+        User user = new User();
+        user.setUsername(userMap.get("username"));
+        user.setPassword(userMap.get("password"));
+        user.setEmail(userMap.get("email"));
+        user.setFullname(userMap.get("fullname"));
+        user.setGender(userMap.get("gender"));
+
+        String pokemonListString = hashOps.get(username, "pokemonlist");
+        if (pokemonListString != null && !pokemonListString.isEmpty()) {
+            try {
+               
+                List<Pokemon> pokemonList = objectMapper.readValue(pokemonListString, new TypeReference<List<Pokemon>>(){});
+                user.setMyPokemonList(pokemonList);
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+
+            }
         }
 
         return user;

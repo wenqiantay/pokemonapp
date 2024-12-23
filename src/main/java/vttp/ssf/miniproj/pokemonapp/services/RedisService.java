@@ -36,5 +36,12 @@ public class RedisService {
 
         return user;
     }
+
+    public User getUserByUsername(String username){
+
+        return redisRepo.getUsername(username);
+    }
+
+
 }
 

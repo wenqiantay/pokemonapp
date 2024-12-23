@@ -1,8 +1,7 @@
 package vttp.ssf.miniproj.pokemonapp.services;
 
-
-
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +17,7 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
+import vttp.ssf.miniproj.pokemonapp.models.User;
 import vttp.ssf.miniproj.pokemonapp.repository.RedisRepo;
 
 @Service
@@ -26,8 +26,8 @@ public class PokemonService {
     @Autowired
     RedisRepo redisRepo;
 
-    private String POKE_API_151 = "https://pokeapi.co/api/v2/pokemon?limit=151";
-    private String POKEMON_KEY = "pokemons";
+    private final String POKE_API_151 = "https://pokeapi.co/api/v2/pokemon?limit=151";
+    private final String POKEMON_KEY = "pokemons";
 
     public List<Pokemon> getPokemonList(){
         
@@ -136,5 +136,38 @@ public class PokemonService {
 
         return pokemon;
     }
+
+    //Shuffle the pokemon list
+    public Pokemon getRandomPokemon(){
+
+        List<Pokemon> pokemonList = (List<Pokemon>) redisRepo.getPokemonList(POKEMON_KEY);
+
+        if(pokemonList == null || pokemonList.isEmpty()){
+
+            return null;
+        }
+
+        Collections.shuffle(pokemonList);
+
+        return pokemonList.get(0);
+ 
+    }
+
+    //catch pokemon and save to redis for user
+    public void saveCaughtPokemon(Pokemon pokemon, User user){
+
+        List<Pokemon> myPokemonList = user.getMyPokemonList();
+    
+        if (myPokemonList == null) {
+            myPokemonList = new LinkedList<>();
+        }
+    
+        myPokemonList.add(pokemon);
+
+        user.setMyPokemonList(myPokemonList);
+
+        redisRepo.insertUser(user);
+    }
+
     
 }

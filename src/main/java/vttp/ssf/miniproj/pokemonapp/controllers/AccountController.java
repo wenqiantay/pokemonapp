@@ -107,9 +107,9 @@ public class AccountController {
     }
 
         model.addAttribute("user", retrievedUser);
-        model.addAttribute("username", user.getUsername());
+        model.addAttribute("username", retrievedUser.getUsername());
 
-        return "main";
+        return "redirect:/game/" + retrievedUser.getUsername();
     }
     
 }

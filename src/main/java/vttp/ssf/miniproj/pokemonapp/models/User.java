@@ -1,5 +1,7 @@
 package vttp.ssf.miniproj.pokemonapp.models;
 
+import java.util.List;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +29,8 @@ public class User {
     @NotNull(message="Please choose your gender")
     private String gender;
 
+    private List<Pokemon> myPokemonList;
+
     public String getUsername() {
         return username;
     }
@@ -39,14 +43,13 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
     public String getEmail() {
         return email;
     }
     public void setEmail(String email) {
         this.email = email;
     }
-
     public String getFullname() {
         return fullname;
     }
@@ -59,10 +62,18 @@ public class User {
     public void setGender(String gender) {
         this.gender = gender;
     }
+    public List<Pokemon> getMyPokemonList() {
+        return myPokemonList;
+    }
+    public void setMyPokemonList(List<Pokemon> myPokemonList) {
+        this.myPokemonList = myPokemonList;
+    }
+
     @Override
     public String toString() {
-        return "User [username=" + username + ", password=" + password + ", email=" + email + "]";
+        return "User [username=" + username + ", password=" + password + ", email=" + email + ", fullname=" + fullname
+                + ", gender=" + gender + ", myPokemonList=" + myPokemonList + "]";
     }
-    
+   
     
 }
