@@ -70,7 +70,7 @@ public class AccountController {
         model.addAttribute("checkpw", checkpw);
         model.addAttribute("username", user.getUsername());
         
-        return "main";
+        return "redirect:/game/" + user.getUsername();
     }
 
 
