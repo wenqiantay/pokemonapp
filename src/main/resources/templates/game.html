@@ -34,9 +34,13 @@
         </tr>
         </table>
     </div>
-
     <div>
-        <p th:if="${message}" th:text="${message}"></p>
+        <p data-th-if="${caughtpokemon}">
+            <span>You have caught <span data-th-text="${caughtpokemon.name}"></span></span>
+        </p>
+    </div>
+    <div>
+        <p data-th-if="${message}" data-th-text="${message}"></p>
     </div>
 
 </body>

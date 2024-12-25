@@ -1,5 +1,7 @@
 package vttp.ssf.miniproj.pokemonapp.services;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +30,8 @@ public class RedisService {
 
         User user = redisRepo.getUser(username, password);
 
-        // Check if the user exists in Redis
         if (user == null) {
-        // If user is not found in Redis, return null
+      
         return null;
     }
 
@@ -41,6 +42,23 @@ public class RedisService {
 
         return redisRepo.getUsername(username);
 
+    }
+
+    //Check if reroll is available
+    public boolean canReroll(User user){
+
+        LocalDate today = LocalDate.now();
+        
+        if(user.getLastRerollDate() != null && user.getLastRerollDate().isEqual(today)){
+            if(user.getRerollCounter() >= 3){
+                return false;
+            }
+        } else {
+            user.setRerollCounter(0);
+        }
+
+        return true;
+        
     }
 
 

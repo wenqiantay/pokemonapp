@@ -137,7 +137,7 @@ public class PokemonService {
         return pokemon;
     }
 
-    //Shuffle the pokemon list
+    //shuffle the pokemon list
     public Pokemon getRandomPokemon(){
 
         List<Pokemon> pokemonList = (List<Pokemon>) redisRepo.getPokemonList(POKEMON_KEY);
@@ -168,6 +168,5 @@ public class PokemonService {
 
         redisRepo.insertUser(user);
     }
-
     
 }

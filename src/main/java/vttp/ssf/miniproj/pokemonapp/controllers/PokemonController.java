@@ -30,23 +30,6 @@ public class PokemonController {
     @Autowired
     RedisService redisSvc;
 
-    // Helper method to check reroll limits
-    private boolean canReroll(User user, Model model) {
-        LocalDate today = LocalDate.now();
-
-        if (user.getLastRerollDate() != null && user.getLastRerollDate().isEqual(today)) {
-            if (user.getRerollCounter() >= 3) {
-                model.addAttribute("message", "You can only re-roll 3 times per day.");
-                model.addAttribute("pokemon", user.getCurrentPokemon());
-                return false;
-            }
-        } else {
-            user.setRerollCounter(0); // Reset counter for new day
-        }
-
-        return true;
-    }
-
     @GetMapping("/pokemons")
     public String displayPokemons(Model model){
 
@@ -69,11 +52,15 @@ public class PokemonController {
             return "error";
         }
 
-        LocalDate today = LocalDate.now();
+        boolean rerollAvailable = redisSvc.canReroll(user);
 
-        // Check if the user has already rerolled today and if the reroll count is 3 or more
-        if (!canReroll(user, model)) {
-            return "game";  
+        if(rerollAvailable == false) {
+
+            model.addAttribute("message", "You can only re-roll 3 times per day.");
+            model.addAttribute("pokemon", user.getCurrentPokemon());
+
+            return "game";
+
         }
 
         Pokemon randomPokemon = pokemonSvc.getRandomPokemon();
@@ -83,7 +70,6 @@ public class PokemonController {
         
         model.addAttribute("pokemon", randomPokemon);
 
-        // Check if any flash attributes exist for a caught Pokémon or a message
         if (model.containsAttribute("message")) {
             model.addAttribute("message", model.asMap().get("message"));
         }
@@ -111,6 +97,7 @@ public class PokemonController {
         if (user.getLastCatchDate() != null && user.getLastCatchDate().isEqual(today)) {
 
             redirectAttributes.addFlashAttribute("message", "You can only catch one Pokémon per day.");
+            model.addAttribute("pokemon", user.getCurrentPokemon());
 
             return "redirect:/game/{username}"; 
         }
@@ -118,19 +105,17 @@ public class PokemonController {
             pokemonSvc.saveCaughtPokemon(pokemon, user);
 
             user.setLastCatchDate(today);
+            user.setCurrentPokemon(pokemon);
+            
+            Pokemon caughtPokemon = user.getCurrentPokemon();
 
-            //update user
             redisSvc.insertUser(user);
 
-            redirectAttributes.addFlashAttribute("caughtpokemon", pokemon);  // Only add if a catch happens
-            redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!");  // Success message
-
-
-            // model.addAttribute("pokemon", pokemon);
-            // model.addAttribute("message", "You caught the Pokémon!");
-
+            redirectAttributes.addFlashAttribute("caughtpokemon", caughtPokemon);
+            redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
         
         return "redirect:/game/{username}";
+
     }
 
     @PostMapping("/run/{username}")
@@ -142,8 +127,15 @@ public class PokemonController {
             return "redirect:/login"; 
         }
 
-        if (!canReroll(user, model)) {
-            return "redirect:/game/{username}";
+        boolean rerollAvailable = redisSvc.canReroll(user);
+
+        if(rerollAvailable == false) {
+
+            model.addAttribute("message", "You can only re-roll 3 times per day.");
+            model.addAttribute("pokemon", user.getCurrentPokemon());
+
+            return "game";
+
         }
 
         Pokemon randomPokemon = pokemonSvc.getRandomPokemon();
