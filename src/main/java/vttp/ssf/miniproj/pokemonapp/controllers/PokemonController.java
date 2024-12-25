@@ -52,6 +52,16 @@ public class PokemonController {
             return "error";
         }
 
+        LocalDate today = LocalDate.now();
+
+        if(user.getLastCatchDate() != null && user.getLastCatchDate().isEqual(today)){
+
+            model.addAttribute("message", "You have already caught one Pokemon today. Come back again tomorrow!");
+            model.addAttribute("pokemon", user.getCurrentPokemon());
+
+            return "game";
+        }
+
         boolean rerollAvailable = redisSvc.canReroll(user);
 
         if(rerollAvailable == false) {
@@ -111,7 +121,7 @@ public class PokemonController {
 
             redisSvc.insertUser(user);
 
-            redirectAttributes.addFlashAttribute("caughtpokemon", caughtPokemon);
+            redirectAttributes.addFlashAttribute("caughtPokemon", caughtPokemon);
             redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
         
         return "redirect:/game/{username}";
