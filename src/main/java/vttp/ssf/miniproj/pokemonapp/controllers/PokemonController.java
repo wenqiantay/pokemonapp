@@ -1,7 +1,11 @@
 package vttp.ssf.miniproj.pokemonapp.controllers;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,12 +17,6 @@ import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
 import vttp.ssf.miniproj.pokemonapp.services.PokemonService;
 import vttp.ssf.miniproj.pokemonapp.services.RedisService;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 
 @Controller
 @RequestMapping
@@ -74,7 +72,15 @@ public class PokemonController {
         }
 
         Pokemon randomPokemon = pokemonSvc.getRandomPokemon();
-        user.setCurrentPokemon(randomPokemon);
+
+       user.setCurrentPokemon(randomPokemon);
+
+         
+        // if (user.getMyPokemonList() != null && user.getMyPokemonList().stream().anyMatch(p -> p.getName().equalsIgnoreCase(randomPokemon.getName()))) {
+        //     System.out.println("User already has this Pokémon: " + randomPokemon.getName());
+        //     model.addAttribute("repeatedpokemonmsg", "You already have this Pokémon.");
+        //     return "redirect:/game/{username}";
+        // }
 
         redisSvc.insertUser(user);
         
@@ -87,6 +93,10 @@ public class PokemonController {
         if (model.containsAttribute("caughtPokemon")) {
             model.addAttribute("caughtPokemon", model.asMap().get("caughtPokemon"));
         }
+
+        // if (model.containsAttribute("repeatedpokemonmsg")) {
+        //     model.addAttribute("repeatedpokemonmsg", model.asMap().get("repeatedpokemonmsg"));
+        // }
 
         return "game";
 
@@ -102,27 +112,42 @@ public class PokemonController {
             return "redirect:/login";
         }
 
-        LocalDate today = LocalDate.now();
-
-        if (user.getLastCatchDate() != null && user.getLastCatchDate().isEqual(today)) {
-
-            redirectAttributes.addFlashAttribute("message", "You can only catch one Pokémon per day.");
-            model.addAttribute("pokemon", user.getCurrentPokemon());
-
-            return "redirect:/game/{username}"; 
-        }
-
-            pokemonSvc.saveCaughtPokemon(pokemon, user);
-
-            user.setLastCatchDate(today);
-            user.setCurrentPokemon(pokemon);
-            
-            Pokemon caughtPokemon = user.getCurrentPokemon();
-
+        if (username.equals("Admin")) {
+            List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
+            user.setMyPokemonList(allPokemons); 
+    
             redisSvc.insertUser(user);
 
-            redirectAttributes.addFlashAttribute("caughtPokemon", caughtPokemon);
-            redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
+        } else {
+
+            LocalDate today = LocalDate.now();
+
+                if (user.getLastCatchDate() != null && user.getLastCatchDate().isEqual(today)) {
+
+                    redirectAttributes.addFlashAttribute("message", "You can only catch one Pokémon per day.");
+                    model.addAttribute("pokemon", user.getCurrentPokemon());
+
+                    return "redirect:/game/{username}"; 
+                }
+            
+            // if (user.getMyPokemonList() != null && user.getMyPokemonList().stream().anyMatch(p -> p.getName().equalsIgnoreCase(pokemon.getName()))) {
+            //     System.out.println("User already has this Pokémon: " + pokemon.getName());
+            //     redirectAttributes.addFlashAttribute("repeatedpokemonmsg", "You already have this Pokémon.");
+            //     return "redirect:/game/{username}";
+            // }
+
+                pokemonSvc.saveCaughtPokemon(pokemon, user);
+
+                user.setLastCatchDate(today);
+                user.setCurrentPokemon(pokemon);
+                
+                Pokemon caughtPokemon = user.getCurrentPokemon();
+
+                redisSvc.insertUser(user);
+
+                redirectAttributes.addFlashAttribute("caughtPokemon", caughtPokemon);
+                redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
+        }
         
         return "redirect:/game/{username}";
 

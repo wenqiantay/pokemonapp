@@ -103,7 +103,7 @@ public class AccountController {
     
     if (retrievedUser == null) {
 
-        // If no user is found or password doesn't match
+        
         FieldError loginErr = new FieldError("user", "username", "Invalid username or password");
         bindings.addError(loginErr);
         return "login";
@@ -121,6 +121,18 @@ public class AccountController {
         request.getSession().invalidate();;
 
         return "redirect:/login";
+    }
+
+    public void testGetUser() {
+        User user = redisSvc.getUserByUsername("Admin");
+    
+        if (user != null) {
+            System.out.println("User: " + user.getUsername());
+            System.out.println("Pokemon List: " + user.getMyPokemonList());
+            System.out.println("Current Pokemon: " + user.getCurrentPokemon());
+        } else {
+            System.out.println("User not found!");
+        }
     }
 
     

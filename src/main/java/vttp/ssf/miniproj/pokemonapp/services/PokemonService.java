@@ -35,9 +35,7 @@ public class PokemonService {
 
         if(redisRepo.pokemonlistExists(POKEMON_KEY)){
 
-            pokemonList = (List<Pokemon>)redisRepo.getPokemonList(POKEMON_KEY);
-
-            return pokemonList;
+           return redisRepo.getPokemonList(POKEMON_KEY);
             
         }
 
@@ -63,14 +61,11 @@ public class PokemonService {
         ResponseEntity<String> resp = restTemplate.exchange(req, String.class);
         String payload = resp.getBody();
         
-        //Read json data to extract the pokemon data url
         try {
 
             JsonReader reader = Json.createReader(new StringReader(payload));
             JsonObject jsonData = reader.readObject();
             JsonArray results = jsonData.getJsonArray("results");
-
-
 
             for(int i = 0; i < results.size(); i++) {
                 String pokemonUrl = results.getJsonObject(i).getString("url");
@@ -88,7 +83,6 @@ public class PokemonService {
                 
             }
 
-            
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -123,9 +117,7 @@ public class PokemonService {
             pokemon.setName(pokemonName);
             pokemon.setPokemonid(pokemonId);
             pokemon.setSprite(spritesUrl);
-            pokemon.setType(typesList);
-
-            
+            pokemon.setType(typesList);       
             
             
         } catch (Exception e) {
@@ -149,7 +141,9 @@ public class PokemonService {
 
         Collections.shuffle(pokemonList);
 
+        System.out.println(pokemonList.get(0));
         return pokemonList.get(0);
+
  
     }
 
@@ -168,5 +162,6 @@ public class PokemonService {
 
         redisRepo.insertUser(user);
     }
+
     
 }

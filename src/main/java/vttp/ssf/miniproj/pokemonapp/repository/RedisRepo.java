@@ -26,9 +26,6 @@ public class RedisRepo {
     @Autowired@Qualifier("redis-0")
     RedisTemplate<String, String> redisTemplate;
 
-    @Autowired@Qualifier("redis-pokemon")
-    RedisTemplate<String, Object> redisTemplatePokemon;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -204,7 +201,7 @@ public class RedisRepo {
             user.setRerollCounter(Integer.parseInt(rerollCountStr));
         }
 
-        String pokemonListString = hashOps.get(username, "pokemonlist");
+        String pokemonListString = userMap.get("pokemonlist");
         if (pokemonListString != null && !pokemonListString.isEmpty()) {
             try {
                
@@ -218,7 +215,7 @@ public class RedisRepo {
             }
         }
 
-        String currentPokemonJson = hashOps.get(username, "currentpokemon");
+        String currentPokemonJson = userMap.get( "currentpokemon");
          if (currentPokemonJson != null && !currentPokemonJson.isEmpty()) {
         try {
             Pokemon currentPokemon = objectMapper.readValue(currentPokemonJson, Pokemon.class);
@@ -234,20 +231,40 @@ public class RedisRepo {
     //set pokemon pokemonlist
     public void savePokemonDatas(String key, List<Pokemon> pokemonList){
 
-        redisTemplatePokemon.opsForValue().set(key, pokemonList);
+        try {
+
+            String pokemonListJson = objectMapper.writeValueAsString(pokemonList);
+            redisTemplate.opsForValue().set(key, pokemonListJson);
+            
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
 
     }
 
     //exists pokemons
     public boolean pokemonlistExists(String key){
-        return redisTemplatePokemon.hasKey(key);
+        return redisTemplate.hasKey(key);
     }
 
     //get pokemons
-    @SuppressWarnings("unchecked")
     public List<Pokemon> getPokemonList(String key){
 
-       return (List<Pokemon>) redisTemplatePokemon.opsForValue().get(key);
+        String pokemonListJson = redisTemplate.opsForValue().get(key);
+
+        if (pokemonListJson != null && !pokemonListJson.isEmpty()) {
+            try {
+                return objectMapper.readValue(pokemonListJson, objectMapper.getTypeFactory().constructCollectionType(List.class, Pokemon.class));
+            
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+        }
+        return null; 
+
     }
 
 

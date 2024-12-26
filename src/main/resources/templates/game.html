@@ -8,6 +8,14 @@
 <body>
     <h1>Welcome <span data-th-text="${username}"></span></h1>
     <h1>Pokemon for the day</h1>
+
+    <div>
+        <p data-th-if="${repeatedpokemonmsg}" data-th-text="${repeatedpokemonmsg}"></p>
+        <p data-th-text="${repeatedpokemonmsg}"></p>
+    </div>
+
+
+
     <div data-th-obj="${pokemon}">
         <h2><span data-th-text="*{pokemon.name}"></span></h2>
     </div>
