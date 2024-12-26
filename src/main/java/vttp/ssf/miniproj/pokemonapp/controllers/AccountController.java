@@ -140,7 +140,7 @@ public class AccountController {
 
         model.addAttribute("user", user);
 
-        return "main";
+        return "profile";
     }
 
     @PostMapping("/profile/{username}")
@@ -173,7 +173,7 @@ public class AccountController {
         model.addAttribute("currentuser", currentUser);
         model.addAttribute("currentPokemonCount", currentPokemonCount);
 
-        return "main";
+        return "profile";
     }
 
     
