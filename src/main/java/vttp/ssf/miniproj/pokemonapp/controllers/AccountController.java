@@ -1,6 +1,6 @@
 package vttp.ssf.miniproj.pokemonapp.controllers;
 
-import java.util.List;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
 import vttp.ssf.miniproj.pokemonapp.services.RedisService;
 
@@ -77,7 +76,7 @@ public class AccountController {
         model.addAttribute("checkpw", checkpw);
         model.addAttribute("username", user.getUsername());
         
-        return "redirect:/game/" + user.getUsername();
+        return "redirect:/login";
     }
 
 
@@ -156,10 +155,19 @@ public class AccountController {
 
         User currentUser = redisSvc.getUserByUsername(username);
 
-        List<Pokemon> myCurrentPokemonList = currentUser.getMyPokemonList();
-        // System.out.println(myCurrentPokemonList);
+        if (user.getMyPokemonList() == null) {
+            user.setMyPokemonList(new LinkedList<>());
+        }
 
-        int currentPokemonCount = myCurrentPokemonList.size();
+        // List<Pokemon> myCurrentPokemonList = currentUser.getMyPokemonList();
+      
+        // if (myCurrentPokemonList == null) {
+        //     myCurrentPokemonList = new LinkedList<>();
+        //     currentUser.setMyPokemonList(myCurrentPokemonList); 
+        // }
+        // // System.out.println(myCurrentPokemonList);
+
+        int currentPokemonCount = user.getMyPokemonList().size();
 
         model.addAttribute("user", user);
         model.addAttribute("currentuser", currentUser);

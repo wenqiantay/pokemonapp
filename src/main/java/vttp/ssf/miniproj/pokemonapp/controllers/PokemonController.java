@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
 import vttp.ssf.miniproj.pokemonapp.services.PokemonService;
@@ -94,10 +95,10 @@ public class PokemonController {
         }
 
     @PostMapping("/catch-pokemon/{username}")
-    public String catchPokemon(@PathVariable String username, @ModelAttribute("pokemon") Pokemon pokemon, Model model, RedirectAttributes redirectAttributes){
-
+    public String catchPokemon(@PathVariable String username, @ModelAttribute("pokemon") Pokemon pokemon, Model model, RedirectAttributes redirectAttributes, HttpSession session){
+    
         User user = redisSvc.getUserByUsername(username);
-
+        
         if (user == null) {
             redirectAttributes.addFlashAttribute("message", "You need to log in to catch Pokémon.");
             return "redirect:/login";
@@ -131,6 +132,8 @@ public class PokemonController {
 
                     redisSvc.insertUser(user); 
                 }
+
+                session.setAttribute("user", user);
 
                 redirectAttributes.addFlashAttribute("caughtPokemon", currentPokemon);
                 redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
