@@ -1,5 +1,7 @@
 package vttp.ssf.miniproj.pokemonapp.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
 import vttp.ssf.miniproj.pokemonapp.services.RedisService;
 
@@ -116,6 +120,7 @@ public class AccountController {
     }
 
     @PostMapping("/logout")
+    @SuppressWarnings("empty-statement")
     public String logout(HttpServletRequest request){
 
         request.getSession().invalidate();;
@@ -123,16 +128,35 @@ public class AccountController {
         return "redirect:/login";
     }
 
-    public void testGetUser() {
-        User user = redisSvc.getUserByUsername("Admin");
-    
-        if (user != null) {
-            System.out.println("User: " + user.getUsername());
-            System.out.println("Pokemon List: " + user.getMyPokemonList());
-            System.out.println("Current Pokemon: " + user.getCurrentPokemon());
-        } else {
-            System.out.println("User not found!");
+    @GetMapping("/profile/{username}")
+    public String getAccountStats(@PathVariable String username, @ModelAttribute("user") User user, Model model){
+
+        user = redisSvc.getUserByUsername(username);
+
+        model.addAttribute("user", user);
+
+        return "main";
+    }
+
+    @PostMapping("/profile/{username}")
+    public String postAccountStats(@PathVariable String username, @ModelAttribute("user") User user, Model model){
+
+        if (user == null) {
+
+            return "redirect:/login";
         }
+
+        User currentUser = redisSvc.getUserByUsername(username);
+
+        List<Pokemon> myCurrentPokemonList = currentUser.getMyPokemonList();
+
+        int currentPokemonCount = myCurrentPokemonList.size();
+
+        model.addAttribute("user", user);
+        model.addAttribute("currentuser", currentUser);
+        model.addAttribute("currentPokemonCount", currentPokemonCount);
+
+        return "main";
     }
 
     

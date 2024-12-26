@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game</title>
+    <title>Catch Em All</title>
 </head>
 <body>
     <h1>Welcome <span data-th-text="${username}"></span></h1>
@@ -57,6 +57,11 @@
     <div>
         <form action="/logout" method="POST">
             <button type="submit">Logout</button>
+        </form>
+    </div>
+    <div>
+        <form data-th-action="@{/profile/{username}(username=${username})}" method="POST">
+            <button type="submit">View my profile</button>
         </form>
     </div>
 

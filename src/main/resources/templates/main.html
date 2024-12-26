@@ -3,10 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catch em all</title>
+    <title>Account summary</title>
 </head>
 <body>
     <h1>Welcome</h1>
-    <h2>Your username is <span data-th-text="${username}"> .</span></h2>
+    <h2>Your username is <span data-th-text="${user.username}"> .</span></h2>  
+    <h2>Your current pokemon count is <span data-th-text="${currentPokemonCount}"></span>/151</h2>
+    <div data-th-each="pokemon: ${user.myPokemonList}">
+        <table>
+            <tr>
+                <td data-th-text="${pokemon.name}"></td>
+                <td>
+                    <img data-th-src="${pokemon.sprite}">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
 </body>
 </html>

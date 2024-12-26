@@ -141,10 +141,8 @@ public class PokemonService {
 
         Collections.shuffle(pokemonList);
 
-        System.out.println(pokemonList.get(0));
         return pokemonList.get(0);
 
- 
     }
 
     //catch pokemon and save to redis for user
