@@ -73,15 +73,10 @@ public class PokemonController {
 
         Pokemon randomPokemon = pokemonSvc.getRandomPokemon();
 
-       user.setCurrentPokemon(randomPokemon);
+        user.setCurrentPokemon(randomPokemon);
 
-         
-        // if (user.getMyPokemonList() != null && user.getMyPokemonList().stream().anyMatch(p -> p.getName().equalsIgnoreCase(randomPokemon.getName()))) {
-        //     System.out.println("User already has this Pokémon: " + randomPokemon.getName());
-        //     model.addAttribute("repeatedpokemonmsg", "You already have this Pokémon.");
-        //     return "redirect:/game/{username}";
-        // }
-
+        System.out.println(user.getCurrentPokemon());
+        
         redisSvc.insertUser(user);
         
         model.addAttribute("pokemon", randomPokemon);
@@ -93,10 +88,6 @@ public class PokemonController {
         if (model.containsAttribute("caughtPokemon")) {
             model.addAttribute("caughtPokemon", model.asMap().get("caughtPokemon"));
         }
-
-        // if (model.containsAttribute("repeatedpokemonmsg")) {
-        //     model.addAttribute("repeatedpokemonmsg", model.asMap().get("repeatedpokemonmsg"));
-        // }
 
         return "game";
 
@@ -129,12 +120,6 @@ public class PokemonController {
 
                     return "redirect:/game/{username}"; 
                 }
-            
-            // if (user.getMyPokemonList() != null && user.getMyPokemonList().stream().anyMatch(p -> p.getName().equalsIgnoreCase(pokemon.getName()))) {
-            //     System.out.println("User already has this Pokémon: " + pokemon.getName());
-            //     redirectAttributes.addFlashAttribute("repeatedpokemonmsg", "You already have this Pokémon.");
-            //     return "redirect:/game/{username}";
-            // }
 
                 pokemonSvc.saveCaughtPokemon(pokemon, user);
 
@@ -142,6 +127,7 @@ public class PokemonController {
                 user.setCurrentPokemon(pokemon);
                 
                 Pokemon caughtPokemon = user.getCurrentPokemon();
+                System.out.println(caughtPokemon);
 
                 redisSvc.insertUser(user);
 

@@ -149,6 +149,7 @@ public class AccountController {
         User currentUser = redisSvc.getUserByUsername(username);
 
         List<Pokemon> myCurrentPokemonList = currentUser.getMyPokemonList();
+        System.out.println(myCurrentPokemonList);
 
         int currentPokemonCount = myCurrentPokemonList.size();
 

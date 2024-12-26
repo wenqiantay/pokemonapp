@@ -7,10 +7,8 @@ public class Pokemon {
     private int pokemonid;
     private String name;
 
-    //Also known as the pixel image -- choose the front_default
     private String sprite;
-
-    //can be more than 1 type
+    
     private List<String> type;
 
     public int getPokemonid() {

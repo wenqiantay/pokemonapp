@@ -60,6 +60,9 @@ public class AppConfig {
       redisTemplate.setConnectionFactory(jedisFac);
       redisTemplate.setKeySerializer(new StringRedisSerializer());
       redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+      redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer()); // Use this for serializing objects like User, Pokemon, etc.
+      redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer()); // Serialize Hash values too
+      
       return redisTemplate;
    }
 
