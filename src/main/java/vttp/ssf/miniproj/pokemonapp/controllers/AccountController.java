@@ -159,14 +159,6 @@ public class AccountController {
             user.setMyPokemonList(new LinkedList<>());
         }
 
-        // List<Pokemon> myCurrentPokemonList = currentUser.getMyPokemonList();
-      
-        // if (myCurrentPokemonList == null) {
-        //     myCurrentPokemonList = new LinkedList<>();
-        //     currentUser.setMyPokemonList(myCurrentPokemonList); 
-        // }
-        // // System.out.println(myCurrentPokemonList);
-
         int currentPokemonCount = user.getMyPokemonList().size();
 
         model.addAttribute("user", user);
