@@ -2,8 +2,10 @@ package vttp.ssf.miniproj.pokemonapp.services;
 
 import java.io.StringReader;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -148,20 +150,35 @@ public class PokemonService {
     //catch pokemon and save to redis for user
     public void saveCaughtPokemon(Pokemon pokemon, User user){
 
-        System.out.println(pokemon);
-        System.out.println(pokemon.getType());
-
         List<Pokemon> myPokemonList = user.getMyPokemonList();
+        Set<Pokemon> uniquePokemonSet = user.getUniquePokemonSet();
     
         if (myPokemonList == null) {
             myPokemonList = new LinkedList<>();
         }
-    
+
+        if(uniquePokemonSet == null){
+            uniquePokemonSet = new HashSet<>();
+        }
+        
+        uniquePokemonSet.add(pokemon);
         myPokemonList.add(pokemon);
 
         user.setMyPokemonList(myPokemonList);
+        user.setUniquePokemonSet(uniquePokemonSet);
 
         redisRepo.insertUser(user);
+    }
+
+    public Set<Pokemon> getUniquePokemonSet(){
+
+        Set<Pokemon> uniquePokemonSet = new HashSet<>();
+        
+        List<Pokemon> pokemonList = getPokemonList();
+
+        uniquePokemonSet.addAll(pokemonList);
+
+        return uniquePokemonSet;
     }
 
     

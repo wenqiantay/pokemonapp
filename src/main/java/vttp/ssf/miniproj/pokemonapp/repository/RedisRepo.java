@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -58,6 +59,7 @@ public class RedisRepo {
 
         values.put("pokemonlist", user.getMyPokemonList());
         values.put("currentpokemon", user.getCurrentPokemon());
+        values.put("uniquepokemonset", user.getUniquePokemonSet());
 
         hashOps.putAll(user.getUsername(), values);
 
@@ -117,6 +119,11 @@ public class RedisRepo {
         Pokemon currentPokemon = (Pokemon) hashOps.get(username, "currentpokemon");
         if (currentPokemon != null) {
         user.setCurrentPokemon(currentPokemon);
+        }
+
+        Set<Pokemon> uniquePokemonSet = (Set<Pokemon>) hashOps.get(username, "uniquepokemonset");
+        if(uniquePokemonSet != null) {
+            user.setUniquePokemonSet(uniquePokemonSet);
         }
 
         if (user.getUsername() == null) {
@@ -179,7 +186,12 @@ public class RedisRepo {
         if (currentPokemon != null) {
             user.setCurrentPokemon(currentPokemon);
         }
-    
+
+        Set<Pokemon> uniquePokemonSet = (Set<Pokemon>) hashOps.get(username, "uniquepokemonset");
+        if(uniquePokemonSet != null) {
+            user.setUniquePokemonSet(uniquePokemonSet);
+        }
+
         return user;
     }
 
@@ -189,7 +201,7 @@ public class RedisRepo {
         redisTemplateObj.opsForValue().set(key, pokemonList);
 
     }
-
+    
     //exists pokemons
     public boolean pokemonlistExists(String key){
         return redisTemplateObj.hasKey(key);

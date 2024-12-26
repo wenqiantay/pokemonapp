@@ -1,6 +1,9 @@
 package vttp.ssf.miniproj.pokemonapp.controllers;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
 import vttp.ssf.miniproj.pokemonapp.services.RedisService;
 
@@ -49,7 +53,6 @@ public class AccountController {
         if(bindings.hasErrors()){
             return "create";
         }
-
 
         if(!checkpw.equalsIgnoreCase(user.getPassword())){
 
@@ -159,14 +162,23 @@ public class AccountController {
             user.setMyPokemonList(new LinkedList<>());
         }
 
-        int currentPokemonCount = user.getMyPokemonList().size();
+        if(user.getUniquePokemonSet() == null){
+            user.setUniquePokemonSet(new HashSet<>());
+        }
 
+        List<Pokemon> sortedUniquePokemonList = new ArrayList<>(user.getUniquePokemonSet());
+        sortedUniquePokemonList.sort((pokemon1, pokemon2) -> Integer.compare(pokemon1.getPokemonid(), pokemon2.getPokemonid()));
+
+        int currentPokemonCount = user.getMyPokemonList().size();
+        int uniquePokemonCount = user.getUniquePokemonSet().size();
+        
         model.addAttribute("user", user);
         model.addAttribute("currentuser", currentUser);
+        model.addAttribute("sortedUniquePokemonList", sortedUniquePokemonList);
         model.addAttribute("currentPokemonCount", currentPokemonCount);
+        model.addAttribute("uniquePokemonCount", uniquePokemonCount);
 
         return "profile";
     }
-
-    
+ 
 }

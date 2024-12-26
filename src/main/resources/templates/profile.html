@@ -8,7 +8,17 @@
 <body>
     <h1>Welcome</h1>
     <h2>Your username is <span data-th-text="${user.username}"> .</span></h2>  
-    <h2>Your current pokemon count is <span data-th-text="${currentPokemonCount}"></span>/151</h2>
+    <h3>Your current pokemon count is <span data-th-text="${currentPokemonCount}"></span></h2>
+    <h3>You have found <span data-th-text="${uniquePokemonCount}"></span> out of 151 Pokemons.</h2>
+    <div>
+        <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
+    <div></div>
+    <div></div>
+    <h2>Your Pokemon inventory:</h2>
     <div data-th-each="pokemon: ${user.myPokemonList}">
         <table>
             <tr>
@@ -16,13 +26,28 @@
                 <td>
                     <img data-th-src="${pokemon.sprite}">
                 </td>
+                <td data-th-each="type : ${pokemon.type}">
+                    <span data-th-text="${type}"></span>
+                </td>
             </tr>
         </table>
     </div>
-    <div>
-        <form action="/logout" method="POST">
-            <button type="submit">Logout</button>
-        </form>
+    <div></div>
+    <div></div>
+    <h2>Your Pokedex:</h2>
+    <div data-th-each="uniquepokemon : ${sortedUniquePokemonList}">
+        <table>
+            <tr>
+                <td data-th-text="${uniquepokemon.name}"></td>
+                <td>
+                    <img data-th-src="${uniquepokemon.sprite}">
+                </td>
+                <td data-th-each="t : ${uniquepokemon.type}">
+                    <span data-th-text="${t}"></span>
+                </td>
+            </tr>
+        </table>
+
     </div>
 </body>
 </html>

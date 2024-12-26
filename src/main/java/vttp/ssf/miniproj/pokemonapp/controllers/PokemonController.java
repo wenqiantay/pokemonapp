@@ -2,6 +2,7 @@ package vttp.ssf.miniproj.pokemonapp.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -75,8 +76,6 @@ public class PokemonController {
         Pokemon randomPokemon = pokemonSvc.getRandomPokemon();
 
         user.setCurrentPokemon(randomPokemon);
-
-        System.out.println(user.getCurrentPokemon());
         
         redisSvc.insertUser(user);
         
@@ -98,7 +97,7 @@ public class PokemonController {
     public String catchPokemon(@PathVariable String username, @ModelAttribute("pokemon") Pokemon pokemon, Model model, RedirectAttributes redirectAttributes, HttpSession session){
     
         User user = redisSvc.getUserByUsername(username);
-        
+
         if (user == null) {
             redirectAttributes.addFlashAttribute("message", "You need to log in to catch Pokémon.");
             return "redirect:/login";
@@ -107,7 +106,9 @@ public class PokemonController {
         if (username.equals("Admin")) {
             List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
             user.setMyPokemonList(allPokemons); 
-    
+            Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
+            user.setUniquePokemonSet(uniquePokemonSet);
+
             redisSvc.insertUser(user);
 
         } else {
@@ -124,11 +125,10 @@ public class PokemonController {
 
                 Pokemon currentPokemon = user.getCurrentPokemon();
                 if (currentPokemon != null) {
+
                     pokemonSvc.saveCaughtPokemon(currentPokemon, user); 
                     user.setLastCatchDate(today);
                     user.setCurrentPokemon(currentPokemon);
-
-                    System.out.println("Caught Pokémon: " + currentPokemon); 
 
                     redisSvc.insertUser(user); 
                 }
@@ -137,7 +137,7 @@ public class PokemonController {
 
                 redirectAttributes.addFlashAttribute("caughtPokemon", currentPokemon);
                 redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
-            }
+        }
         
             return "redirect:/game/{username}";
 

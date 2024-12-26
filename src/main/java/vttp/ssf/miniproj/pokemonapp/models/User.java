@@ -2,6 +2,7 @@ package vttp.ssf.miniproj.pokemonapp.models;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -31,6 +32,8 @@ public class User {
     private String gender;
 
     private List<Pokemon> myPokemonList;
+
+    private Set<Pokemon> uniquePokemonSet;
 
     private LocalDate lastCatchDate;
 
@@ -103,13 +106,21 @@ public class User {
         this.lastRerollDate = lastRerollDate;
     }
 
+    public Set<Pokemon> getUniquePokemonSet() {
+        return uniquePokemonSet;
+    }
+
+    public void setUniquePokemonSet(Set<Pokemon> uniquePokemonSet) {
+        this.uniquePokemonSet = uniquePokemonSet;
+    }
+
     @Override
     public String toString() {
         return "User [username=" + username + ", password=" + password + ", email=" + email + ", fullname=" + fullname
-                + ", gender=" + gender + ", myPokemonList=" + myPokemonList + ", lastCatchDate=" + lastCatchDate
-                + ", rerollCounter=" + rerollCounter + ", lastRerollDate=" + lastRerollDate + "]";
+                + ", gender=" + gender + ", myPokemonList=" + myPokemonList + ", uniquePokemonSet=" + uniquePokemonSet
+                + ", lastCatchDate=" + lastCatchDate + ", rerollCounter=" + rerollCounter + ", lastRerollDate="
+                + lastRerollDate + ", currentPokemon=" + currentPokemon + "]";
     }
 
-   
     
 }
