@@ -148,6 +148,9 @@ public class PokemonService {
     //catch pokemon and save to redis for user
     public void saveCaughtPokemon(Pokemon pokemon, User user){
 
+        System.out.println(pokemon);
+        System.out.println(pokemon.getType());
+
         List<Pokemon> myPokemonList = user.getMyPokemonList();
     
         if (myPokemonList == null) {

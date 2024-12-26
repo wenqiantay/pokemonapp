@@ -121,21 +121,22 @@ public class PokemonController {
                     return "redirect:/game/{username}"; 
                 }
 
-                pokemonSvc.saveCaughtPokemon(pokemon, user);
+                Pokemon currentPokemon = user.getCurrentPokemon();
+                if (currentPokemon != null) {
+                    pokemonSvc.saveCaughtPokemon(currentPokemon, user); 
+                    user.setLastCatchDate(today);
+                    user.setCurrentPokemon(currentPokemon);
 
-                user.setLastCatchDate(today);
-                user.setCurrentPokemon(pokemon);
-                
-                Pokemon caughtPokemon = user.getCurrentPokemon();
-                System.out.println(caughtPokemon);
+                    System.out.println("Caught Pokémon: " + currentPokemon); 
 
-                redisSvc.insertUser(user);
+                    redisSvc.insertUser(user); 
+                }
 
-                redirectAttributes.addFlashAttribute("caughtPokemon", caughtPokemon);
+                redirectAttributes.addFlashAttribute("caughtPokemon", currentPokemon);
                 redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
-        }
+            }
         
-        return "redirect:/game/{username}";
+            return "redirect:/game/{username}";
 
     }
 
