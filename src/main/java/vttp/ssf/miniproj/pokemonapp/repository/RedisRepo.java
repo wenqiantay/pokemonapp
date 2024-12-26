@@ -71,7 +71,7 @@ public class RedisRepo {
     }
 
      
-    @SuppressWarnings("null")
+    @SuppressWarnings({ "null", "unchecked" })
     public User getUser(String username, String password){
 
         if (username == null || username.trim().isEmpty()) {
@@ -132,7 +132,7 @@ public class RedisRepo {
         return user;
     }
 
-    @SuppressWarnings("null")
+    @SuppressWarnings({ "null", "unchecked" })
     public User getUsername(String username){
 
         HashOperations<String, String, Object> hashOps = redisTemplateObj.opsForHash();
