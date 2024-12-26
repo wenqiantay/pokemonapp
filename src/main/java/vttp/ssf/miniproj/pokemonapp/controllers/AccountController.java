@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
@@ -24,7 +23,6 @@ import vttp.ssf.miniproj.pokemonapp.services.RedisService;
 
 
 @Controller
-@SessionAttributes("user")
 @RequestMapping
 public class AccountController {
 
@@ -43,7 +41,7 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public String postCreate(@RequestBody MultiValueMap<String, String> form, @Valid@ModelAttribute("user") User user, BindingResult bindings, Model model) {
+    public String postCreate(@RequestBody MultiValueMap<String, String> form, @Valid@ModelAttribute("user") User user, BindingResult bindings, Model model, HttpSession session) {
   
         String checkpw = form.getFirst("checkpw");
 
@@ -73,6 +71,8 @@ public class AccountController {
 
         redisSvc.insertUser(user);
 
+        session.setAttribute("user", user);
+
         model.addAttribute("user", user);
         model.addAttribute("checkpw", checkpw);
         model.addAttribute("username", user.getUsername());
@@ -91,7 +91,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public String postLogin(@Valid@ModelAttribute("user") User user, BindingResult bindings, Model model){
+    public String postLogin(@Valid@ModelAttribute("user") User user, BindingResult bindings, Model model, HttpSession session){
         
         String username = user.getUsername();
         String password = user.getPassword();
@@ -111,25 +111,31 @@ public class AccountController {
         FieldError loginErr = new FieldError("user", "username", "Invalid username or password");
         bindings.addError(loginErr);
         return "login";
-    }
+    }   
 
-        model.addAttribute("user", retrievedUser);
+        session.setAttribute("user", retrievedUser);
+
         model.addAttribute("username", retrievedUser.getUsername());
 
         return "redirect:/game/" + retrievedUser.getUsername();
     }
 
     @PostMapping("/logout")
-    @SuppressWarnings("empty-statement")
-    public String logout(HttpServletRequest request){
+    public String logout(HttpSession session){
 
-        request.getSession().invalidate();;
+        session.invalidate();
 
         return "redirect:/login";
     }
 
     @GetMapping("/profile/{username}")
-    public String getAccountStats(@PathVariable String username, @ModelAttribute("user") User user, Model model){
+    public String getAccountStats(@PathVariable String username, HttpSession session, Model model){
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            return "redirect:/login";
+        }
 
         user = redisSvc.getUserByUsername(username);
 
@@ -139,7 +145,9 @@ public class AccountController {
     }
 
     @PostMapping("/profile/{username}")
-    public String postAccountStats(@PathVariable String username, @ModelAttribute("user") User user, Model model){
+    public String postAccountStats(@PathVariable String username, HttpSession session, Model model){
+        
+        User user = (User) session.getAttribute("user");
 
         if (user == null) {
 
@@ -149,7 +157,7 @@ public class AccountController {
         User currentUser = redisSvc.getUserByUsername(username);
 
         List<Pokemon> myCurrentPokemonList = currentUser.getMyPokemonList();
-        System.out.println(myCurrentPokemonList);
+        // System.out.println(myCurrentPokemonList);
 
         int currentPokemonCount = myCurrentPokemonList.size();
 
