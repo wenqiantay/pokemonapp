@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import vttp.ssf.miniproj.pokemonapp.models.User;
 import vttp.ssf.miniproj.pokemonapp.services.RedisService;
 
 
 @Controller
+@SessionAttributes("user")
 @RequestMapping
 public class AccountController {
 
@@ -111,5 +114,14 @@ public class AccountController {
 
         return "redirect:/game/" + retrievedUser.getUsername();
     }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request){
+
+        request.getSession().invalidate();;
+
+        return "redirect:/login";
+    }
+
     
 }

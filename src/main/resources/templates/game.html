@@ -19,15 +19,19 @@
             <tr>
             <td>
                 <form method="POST" data-th-action="@{/catch-pokemon/{username}(username=${username})}">
+                    <input type="hidden" data-th-value="${pokemon.pokemonid}" name="pokemonid"/>
                     <input type="hidden" data-th-value="${pokemon.name}" name="name"/>
                      <input type="hidden" data-th-value="${pokemon.sprite}" name="sprite"/>
+                     <input type="hidden" data-th-value="${pokemon.type}" name="pokemontype"/>
                      <button type="submit">Catch</button>
                 </form>
             </td>
             <td>
                 <form method="POST" data-th-action="@{/run/{username}(username=${username})}">
+                    <input type="hidden" data-th-value="${pokemon.pokemonid}" name="pokemonid"/>
                     <input type="hidden" data-th-value="${pokemon.name}" name="name"/>
                      <input type="hidden" data-th-value="${pokemon.sprite}" name="sprite"/>
+                     <input type="hidden" data-th-value="${pokemon.type}" name="pokemontype"/>
                      <button type="submit">Run</button>
                 </form>
             </td>
@@ -41,6 +45,11 @@
     </div>
     <div>
         <p data-th-if="${message}" data-th-text="${message}"></p>
+    </div>
+    <div>
+        <form action="/logout" method="POST">
+            <button type="submit">Logout</button>
+        </form>
     </div>
 
 </body>
