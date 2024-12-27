@@ -2,7 +2,6 @@ package vttp.ssf.miniproj.pokemonapp.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +38,14 @@ public class PokemonController {
 
         return "pokemons";
         
+    }
+
+    @GetMapping("/")
+    public String indexController(Model model){
+
+        model.addAttribute("user", new User());
+
+        return "login";
     }
  
     @GetMapping("/game/{username}")
@@ -103,15 +110,15 @@ public class PokemonController {
             return "redirect:/login";
         }
 
-        if (username.equals("Admin")) {
-            List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
-            user.setMyPokemonList(allPokemons); 
-            Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
-            user.setUniquePokemonSet(uniquePokemonSet);
+        // if (username.equals("Admin")) {
+        //     List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
+        //     user.setMyPokemonList(allPokemons); 
+        //     Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
+        //     user.setUniquePokemonSet(uniquePokemonSet);
 
-            redisSvc.insertUser(user);
+        //     redisSvc.insertUser(user);
 
-        } else {
+        // } else {}
 
             LocalDate today = LocalDate.now();
 
@@ -137,7 +144,7 @@ public class PokemonController {
 
                 redirectAttributes.addFlashAttribute("caughtPokemon", currentPokemon);
                 redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
-        }
+        
         
             return "redirect:/game/{username}";
 

@@ -2,12 +2,10 @@ body {
     margin: 0;
     font-family: 'Press Start 2P', cursive;
     background-color: #f0f0f0;
+    
 }
 
 .catch-button {
-    margin-top: 20px;
-    margin-left: 550px;
-    margin-right: 100px;
     background-color: #FF3B30;
     color: #FFFFFF;
     font-size: 18px;
@@ -20,6 +18,7 @@ body {
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin: 10px;
 }
 
 .catch-button:hover {
@@ -67,9 +66,6 @@ body {
 
 
 .run-button {
-    margin-top: 20px;
-    margin-left: 30px;
-    margin-right: 800px;
     background-color: #4CAF50;
     color: #FFFFFF;
     font-size: 18px;
@@ -82,7 +78,7 @@ body {
     justify-content: flex-start;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: auto;
+    margin: 10px;
 }
 
 .run-button:hover {
@@ -127,7 +123,15 @@ body {
         transform: translateX(0);
     }
 }
-
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;  /* Full height for flexbox */
+    flex-direction: row; /* Buttons are aligned horizontally */
+    gap: 20px; /* Space between the buttons */
+}
 .nav-item {
     margin-top: 10px;
     margin-right: 50px;
@@ -198,12 +202,6 @@ body {
     background-color: #FFCB05;
     color: #0066CC;
     border: 3px solid #F9A825;
-}
-
-.error-message {
-    background-color: #FF3B30;
-    color: white;
-    border: 3px solid #D32F2F;
 }
 
 .info-message {
@@ -279,11 +277,12 @@ body {
 .navbar .navbar-brand img {
     width: 40px;
     height: 40px;
+    margin-bottom: 10px;
     border-radius: 50%;
 }
 
 .navbar-nav .nav-item.dropdown {
-    margin-right: 10px;
+    position: relative;
 }
 
 .navbar-nav .nav-item.dropdown .dropdown-menu {
@@ -293,7 +292,14 @@ body {
     padding: 0;
     min-width: 150px;
     width: auto;
-    left: -90px
+    position: absolute;
+    left: -90px;
+    top: 100%;
+}
+
+.navbar-nav .dropdown-menu a {
+    font-size: 15px; 
+    color: #fff; 
 }
 
 .navbar-nav .nav-item.dropdown .dropdown-item {
@@ -384,53 +390,6 @@ body {
     }
 }
 
-.login-card {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 15px;
-    padding: 40px;
-    max-width: 400px;
-    margin: auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-h1 {
-    font-size: 20px;
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-label {
-    font-size: 18px;
-    color: #1b75bc;
-}
-
-input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 2px solid #1b75bc;
-    font-size: 18px;
-    background-color: #fff;
-}
-
-button[type="submit"]:hover {
-    background-color: #FF5F00;
-    color: white;
-}
-
-a {
-    text-decoration: none;
-    color: #FFCB05;
-    font-size: 16px;
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-}
-
-a:hover {
-    color: #FF5F00;
-}
 
 
 

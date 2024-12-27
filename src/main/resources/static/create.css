@@ -1,0 +1,167 @@
+body {
+    margin: 0;
+    font-family: 'Press Start 2P', cursive;
+    background-color: #f0f0f0;
+    
+}
+
+.error-message {
+    background-color: #FF3B30;
+    color: white;
+    border: 3px solid #D32F2F;
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: #3B8C8E;
+    padding: 5px 20px;
+    position: relative;
+}
+
+.navbar .navbar-brand {
+    color: #FFCB05;
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.navbar .navbar-brand img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+}
+
+.navbar-nav .nav-item.dropdown {
+    position: relative;
+}
+
+.navbar-nav .nav-item.dropdown .dropdown-menu {
+    background-color: #2196F3;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 0;
+    min-width: 150px;
+    width: auto;
+    position: absolute;
+    left: -90px;
+    top: 100%;
+}
+
+.navbar-nav .dropdown-menu a {
+    font-size: 15px; 
+    color: #fff; 
+}
+
+.navbar-nav .nav-item.dropdown .dropdown-item {
+    color: white;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-item.dropdown .dropdown-item:hover {
+    background-color: #FFCB05;
+    color: #333;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .navbar-nav .nav-item .dropdown-menu {
+        text-align: center;
+    }
+
+    .navbar-nav .nav-item .dropdown-item {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+.form-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 30px;
+    width: max-content;
+    margin: 0 auto;
+    margin-top: 50px;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    margin-bottom: 20px;
+}
+
+td {
+    padding: 10px;
+    font-size: 18px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 2px solid #ffcb05;
+    background-color: #ffffff;
+    color: #000;
+    font-size: 16px;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+    outline: none;
+    border-color: #0066cc;
+}
+
+button {
+    background-color: #FF3B30;
+    color: #fff;
+    font-size: 18px;
+    padding: 12px 30px;
+    border-radius: 50px;
+    border: 2px solid #C62828;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #FF6659;
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #D32F2F;
+    color: #fff;
+}
+.back-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-button-container button {
+    background-color: #FF3B30;
+    color: #ffffff;
+    font-size: 18px;
+    padding: 12px 30px;
+    border-radius: 50px;
+    border: 2px solid #C62828;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: auto;
+}
+
+.back-button-container button:hover {
+    background-color: #FF6659;
+    transform: scale(1.05);
+}
+
+.back-button-container button:active {
+    background-color: #D32F2F;
+}
+
+

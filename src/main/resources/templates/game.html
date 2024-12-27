@@ -25,6 +25,9 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" data-th-href="@{/pokemons}" id="extra-link-button">Pokemons</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="ms-2" data-th-text="${username}" alt="Login"></span>
@@ -58,31 +61,27 @@
     <div data-th-obj="${pokemon}" class="text-center">
         <h2><span data-th-text="*{pokemon.name}" class="pokemon-name"></span></h2>
     </div>
-    <div>
-        <table>
-            <tr>
-                <td>
-                    <form method="POST" data-th-action="@{/catch-pokemon/{username}(username=${username})}">
-                        <input type="hidden" data-th-value="${pokemon.pokemonid}" name="pokemonid" />
-                        <input type="hidden" data-th-value="${pokemon.name}" name="name" />
-                        <input type="hidden" data-th-value="${pokemon.sprite}" name="sprite" />
-                        <input type="hidden" data-th-value="${pokemon.type}" name="pokemontype" />
-                        <button type="submit" class="catch-button">
-                            <span class="icon"><img data-th-src="@{/file-pokeball-png-0.png}" width="20" height="20"></span>
-                                Catch</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="POST" data-th-action="@{/run/{username}(username=${username})}">
-                        <input type="hidden" data-th-value="${pokemon.pokemonid}" name="pokemonid" />
-                        <input type="hidden" data-th-value="${pokemon.name}" name="name" />
-                        <input type="hidden" data-th-value="${pokemon.sprite}" name="sprite" />
-                        <input type="hidden" data-th-value="${pokemon.type}" name="pokemontype" />
-                        <button type="submit" class="run-button">Run</button>
-                    </form>
-                </td>
-            </tr>
-        </table>
+    <div class="buttons-container">
+        <div>
+            <form method="POST" data-th-action="@{/catch-pokemon/{username}(username=${username})}">
+                <input type="hidden" data-th-value="${pokemon.pokemonid}" name="pokemonid" />
+                <input type="hidden" data-th-value="${pokemon.name}" name="name" />
+                <input type="hidden" data-th-value="${pokemon.sprite}" name="sprite" />
+                <input type="hidden" data-th-value="${pokemon.type}" name="pokemontype" />
+                <button type="submit" class="catch-button">
+                    <span class="icon"><img data-th-src="@{/file-pokeball-png-0.png}" width="20" height="20"></span>
+                        Catch</button>
+            </form> 
+        </div>
+        <div>
+            <form method="POST" data-th-action="@{/run/{username}(username=${username})}">
+                <input type="hidden" data-th-value="${pokemon.pokemonid}" name="pokemonid" />
+                <input type="hidden" data-th-value="${pokemon.name}" name="name" />
+                <input type="hidden" data-th-value="${pokemon.sprite}" name="sprite" />
+                <input type="hidden" data-th-value="${pokemon.type}" name="pokemontype" />
+                <button type="submit" class="run-button">Run</button>
+            </form>
+        </div>        
     </div>
     <div class="text-center">
         <p class= "message-box success-message" data-th-if="${caughtPokemon}">

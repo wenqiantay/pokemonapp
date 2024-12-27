@@ -161,7 +161,18 @@ public class PokemonService {
             uniquePokemonSet = new HashSet<>();
         }
         
-        uniquePokemonSet.add(pokemon);
+        boolean isDuplicate = false;
+        for (Pokemon existingPokemon : uniquePokemonSet) {
+            if (existingPokemon.getPokemonid() == pokemon.getPokemonid()) {
+                isDuplicate = true; 
+                break;
+            }
+        }
+        
+        if (!isDuplicate) {
+            uniquePokemonSet.add(pokemon); 
+        }
+
         myPokemonList.add(pokemon);
 
         user.setMyPokemonList(myPokemonList);
@@ -173,7 +184,7 @@ public class PokemonService {
     public Set<Pokemon> getUniquePokemonSet(){
 
         Set<Pokemon> uniquePokemonSet = new HashSet<>();
-        
+
         List<Pokemon> pokemonList = getPokemonList();
 
         uniquePokemonSet.addAll(pokemonList);
