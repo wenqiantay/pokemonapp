@@ -128,12 +128,6 @@ body {
     }
 }
 
-.navbar {
-
-    background-color: lightcoral !important;
-
-}
-
 .nav-item {
     margin-top: 10px;
     margin-right: 50px;
@@ -143,10 +137,11 @@ body {
     margin-top: 80px;
     margin-bottom: 40px;
     font-family: 'Press Start 2P', cursive;
-    font-size: 48px;
+    font-size: 100px;
     color: #ffcb05;
     text-shadow: 3px 3px 0 #0066cc, -1px -1px 0 #0066cc, 1px -1px 0 #0066cc, -1px 1px 0 #0066cc, 1px 1px 0 #0066cc;
     text-align: center;
+    text-transform: capitalize;
 }
 
 .pokemon-name {
@@ -270,7 +265,7 @@ body {
 /* Navbar Styling */
 .navbar {
     background-color: #3B8C8E;
-    padding: 10px 20px;
+    padding: 5px 20px;
     position: relative;
 }
 
@@ -288,7 +283,7 @@ body {
 }
 
 .navbar-nav .nav-item.dropdown {
-   margin-right: 10px;
+    margin-right: 10px;
 }
 
 .navbar-nav .nav-item.dropdown .dropdown-menu {
@@ -388,3 +383,56 @@ body {
         font-size: 1rem;
     }
 }
+
+.login-card {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 40px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+label {
+    font-size: 18px;
+    color: #1b75bc;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 2px solid #1b75bc;
+    font-size: 18px;
+    background-color: #fff;
+}
+
+button[type="submit"]:hover {
+    background-color: #FF5F00;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: #FFCB05;
+    font-size: 16px;
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+a:hover {
+    color: #FF5F00;
+}
+
+
+
+
+
