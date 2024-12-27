@@ -1,0 +1,98 @@
+.catch-button {
+    margin-top: 20px;
+    margin-left: 400px;
+    margin-right: 100px;
+    background-color: #FF3B30; /* Catch Button Red */
+    color: #FFFFFF; /* White text */
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 2px solid #C62828; /* Darker Red border for definition */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .catch-button:hover {
+    background-color: #FF6659; /* Lighter red on hover */
+    transform: scale(1.05); /* Slight zoom effect */
+  }
+  
+  .catch-button:active {
+    background-color: #D32F2F; /* Darker red on click */
+    color: #FFFFFF; /* Keep text white */
+  }
+  
+  .catch-button .icon {
+    margin-right: 10px;
+    margin-bottom: 6px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Optional: Shake effect to mimic the "Catch" excitement */
+  .catch-button:active {
+    animation: shake 0.3s ease;
+  }
+  
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+  
+
+.run-button {
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 500px;
+    background-color: #4CAF50; /* Wild Grass Green */
+    color: #FFFFFF; /* White text */
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 2px solid #388E3C; /* Darker Green border for definition */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: auto;
+  }
+  
+  .run-button:hover {
+    background-color: #66BB6A; /* Lighter green on hover */
+    transform: scale(1.05); /* Slight zoom effect on hover */
+  }
+  
+  .run-button:active {
+    background-color: #2C6E2F; /* Darker green on click */
+    color: #FFFFFF; /* Keep text white */
+  }
+  
+  .run-button .icon {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+  
+  /* Optional: add a shake effect to indicate running away */
+  .run-button:active {
+    animation: shake 0.3s ease;
+  }
+  
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+

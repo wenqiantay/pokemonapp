@@ -40,7 +40,7 @@ public class PokemonController {
         return "pokemons";
         
     }
-
+ 
     @GetMapping("/game/{username}")
     public String displayRandomPokemon(@PathVariable String username, Model model){
 

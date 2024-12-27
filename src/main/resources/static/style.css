@@ -1,6 +1,7 @@
 .error {
 	color: red;
 }
+
 .pokemon-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* 5 columns */
@@ -40,3 +41,10 @@
         grid-template-columns: repeat(2, 1fr); /* 2 columns */
     }
 }
+
+
+.btn-outline-primary:hover {
+    background-color: red;
+}
+
+
