@@ -302,6 +302,7 @@ button:active {
     font-size: 1.2rem;
     color: #FFCB05;
     margin-bottom: 10px;
+    text-transform: capitalize;
 }
 
 .pokemon-types {
