@@ -128,9 +128,9 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;  /* Full height for flexbox */
-    flex-direction: row; /* Buttons are aligned horizontally */
-    gap: 20px; /* Space between the buttons */
+    height: 100%;
+    flex-direction: row; 
+    gap: 20px; 
 }
 .nav-item {
     margin-top: 10px;
