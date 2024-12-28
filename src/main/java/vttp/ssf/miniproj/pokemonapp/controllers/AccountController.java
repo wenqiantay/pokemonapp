@@ -85,6 +85,7 @@ public class AccountController {
 
     @GetMapping("/login")
     public String getLogin(Model model) {
+
         User user = new User();
 
         model.addAttribute("user", user);
@@ -107,13 +108,13 @@ public class AccountController {
 
         User retrievedUser = redisSvc.getUser(username, password);
     
-    if (retrievedUser == null) {
+        if (retrievedUser == null) {
 
-        
-        FieldError loginErr = new FieldError("user", "username", "Invalid username or password");
-        bindings.addError(loginErr);
-        return "login";
-    }   
+            
+            FieldError loginErr = new FieldError("user", "username", "Invalid username or password");
+            bindings.addError(loginErr);
+            return "login";
+        }   
 
         session.setAttribute("user", retrievedUser);
 
@@ -122,13 +123,13 @@ public class AccountController {
         return "redirect:/game/" + retrievedUser.getUsername();
     }
 
-    @PostMapping("/logout")
-    public String logout(HttpSession session){
+    // @PostMapping("/logout")
+    // public String logout(HttpSession session){
 
-        session.invalidate();
+    //     session.invalidate();
 
-        return "redirect:/login";
-    }
+    //     return "redirect:/login";
+    // }
 
     @GetMapping("/profile/{username}")
     public String getAccountStats(@PathVariable String username, HttpSession session, Model model){

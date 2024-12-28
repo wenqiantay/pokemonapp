@@ -2,6 +2,7 @@ package vttp.ssf.miniproj.pokemonapp.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -82,12 +83,16 @@ public class PokemonController {
 
         Pokemon randomPokemon = pokemonSvc.getRandomPokemon();
 
+        if(user.getUniquePokemonSet().contains(randomPokemon)){
+            
+            model.addAttribute("ownedmessage", "Pokemon is already in pokedex.");
+        }
+
         user.setCurrentPokemon(randomPokemon);
-        
         redisSvc.insertUser(user);
         
         model.addAttribute("pokemon", randomPokemon);
-
+    
         if (model.containsAttribute("message")) {
             model.addAttribute("message", model.asMap().get("message"));
         }
@@ -110,15 +115,15 @@ public class PokemonController {
             return "redirect:/login";
         }
 
-        // if (username.equals("Admin")) {
-        //     List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
-        //     user.setMyPokemonList(allPokemons); 
-        //     Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
-        //     user.setUniquePokemonSet(uniquePokemonSet);
+        if (username.equals("Admin")) {
+            List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
+            user.setMyPokemonList(allPokemons); 
+            Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
+            user.setUniquePokemonSet(uniquePokemonSet);
 
-        //     redisSvc.insertUser(user);
+            redisSvc.insertUser(user);
 
-        // } else {}
+        } else {
 
             LocalDate today = LocalDate.now();
 
@@ -131,6 +136,14 @@ public class PokemonController {
                 }
 
                 Pokemon currentPokemon = user.getCurrentPokemon();
+
+                if (user.getUniquePokemonSet().contains(currentPokemon)) {
+
+                    redirectAttributes.addFlashAttribute("ownedmessage", "You already caught this Pokémon.");
+
+                    return "redirect:/game/{username}";
+                }
+            
                 if (currentPokemon != null) {
 
                     pokemonSvc.saveCaughtPokemon(currentPokemon, user); 
@@ -145,8 +158,9 @@ public class PokemonController {
                 redirectAttributes.addFlashAttribute("caughtPokemon", currentPokemon);
                 redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
         
-        
-            return "redirect:/game/{username}";
+            }
+                return "redirect:/game/{username}";
+    
 
     }
 

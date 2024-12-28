@@ -61,6 +61,12 @@
     <div data-th-obj="${pokemon}" class="text-center">
         <h2><span data-th-text="*{pokemon.name}" class="pokemon-name"></span></h2>
     </div>
+    <div class="text-center" data-th-if="${ownedmessage}">
+        <div class="alert alert-warning">
+            <span data-th-text="${ownedmessage}"></span>
+        </div>
+    </div>
+    
     <div class="buttons-container">
         <div>
             <form method="POST" data-th-action="@{/catch-pokemon/{username}(username=${username})}">
