@@ -4,11 +4,17 @@ body {
     background-color: #f0f0f0;
     
 }
-
 .error-message {
     background-color: #FF3B30;
     color: white;
     border: 3px solid #D32F2F;
+    padding: 10px;
+    font-size: 16px; 
+    margin-top: 5px;
+    border-radius: 5px; 
+    width: 100%; 
+    box-sizing: border-box; 
+    display: block; 
 }
 
 /* Navbar Styling */
@@ -85,24 +91,27 @@ body {
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     padding: 30px;
-    width: max-content;
-    margin: 0 auto;
-    margin-top: 50px;
+    width: 100%;
+    max-width: 600px;
+    margin: 50px auto;
     color: white;
+    box-sizing: border-box;
 }
 
 table {
     width: 100%;
-    border-collapse: separate;
-    margin-bottom: 20px;
+    border-collapse: collapse;
 }
 
 td {
     padding: 10px;
     font-size: 18px;
+    vertical-align: middle;
+    width: 50%;
+    box-sizing: border-box;
 }
 
-input[type="text"], input[type="email"], input[type="password"], select {
+td input[type="text"], td input[type="email"], td input[type="password"], td select {
     width: 100%;
     padding: 12px;
     border-radius: 5px;
@@ -110,12 +119,28 @@ input[type="text"], input[type="email"], input[type="password"], select {
     background-color: #ffffff;
     color: #000;
     font-size: 16px;
+    box-sizing: border-box;
 }
+
+.error-message {
+    background-color: #FF3B30;
+    color: white;
+    border: 3px solid #D32F2F;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 5px;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+}
+
 
 input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
     outline: none;
     border-color: #0066cc;
 }
+
 
 button {
     background-color: #FF3B30;
@@ -138,30 +163,17 @@ button:active {
     background-color: #D32F2F;
     color: #fff;
 }
-.back-button-container {
-    text-align: center;
-    margin-top: 20px;
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 20px;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], select {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 16px;
+    }
 }
-
-.back-button-container button {
-    background-color: #FF3B30;
-    color: #ffffff;
-    font-size: 18px;
-    padding: 12px 30px;
-    border-radius: 50px;
-    border: 2px solid #C62828;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: auto;
-}
-
-.back-button-container button:hover {
-    background-color: #FF6659;
-    transform: scale(1.05);
-}
-
-.back-button-container button:active {
-    background-color: #D32F2F;
-}
-
-

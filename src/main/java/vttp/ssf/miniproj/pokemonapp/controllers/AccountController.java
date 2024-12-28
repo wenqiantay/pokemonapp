@@ -54,7 +54,7 @@ public class AccountController {
             return "create";
         }
 
-        if(!checkpw.equalsIgnoreCase(user.getPassword())){
+        if(!checkpw.equals(user.getPassword())){
 
             FieldError passworderr = new FieldError("user", "password", "Password does not match" );
 
@@ -109,8 +109,7 @@ public class AccountController {
         User retrievedUser = redisSvc.getUser(username, password);
     
         if (retrievedUser == null) {
-
-            
+        
             FieldError loginErr = new FieldError("user", "username", "Invalid username or password");
             bindings.addError(loginErr);
             return "login";
@@ -122,14 +121,6 @@ public class AccountController {
 
         return "redirect:/game/" + retrievedUser.getUsername();
     }
-
-    // @PostMapping("/logout")
-    // public String logout(HttpSession session){
-
-    //     session.invalidate();
-
-    //     return "redirect:/login";
-    // }
 
     @GetMapping("/profile/{username}")
     public String getAccountStats(@PathVariable String username, HttpSession session, Model model){

@@ -23,9 +23,7 @@ public class AccountRestController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/login");
     
-        return new ResponseEntity<String>(headers, HttpStatus.FOUND);
-
-        // return ResponseEntity.ok().headers(headers);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
 }

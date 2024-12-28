@@ -2,7 +2,6 @@ package vttp.ssf.miniproj.pokemonapp.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -83,11 +82,6 @@ public class PokemonController {
 
         Pokemon randomPokemon = pokemonSvc.getRandomPokemon();
 
-        if(user.getUniquePokemonSet().contains(randomPokemon)){
-            
-            model.addAttribute("ownedmessage", "Pokemon is already in pokedex.");
-        }
-
         user.setCurrentPokemon(randomPokemon);
         redisSvc.insertUser(user);
         
@@ -111,25 +105,25 @@ public class PokemonController {
         User user = redisSvc.getUserByUsername(username);
 
         if (user == null) {
-            redirectAttributes.addFlashAttribute("message", "You need to log in to catch Pokémon.");
+            redirectAttributes.addFlashAttribute("message", "You need to log in to catch Pokemon.");
             return "redirect:/login";
         }
 
-        if (username.equals("Admin")) {
-            List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
-            user.setMyPokemonList(allPokemons); 
-            Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
-            user.setUniquePokemonSet(uniquePokemonSet);
+        // if (username.equals("Admin")) {
+        //     List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
+        //     user.setMyPokemonList(allPokemons); 
+        //     Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
+        //     user.setUniquePokemonSet(uniquePokemonSet);
 
-            redisSvc.insertUser(user);
+        //     redisSvc.insertUser(user);
 
-        } else {
+        // } else {}
 
             LocalDate today = LocalDate.now();
 
                 if (user.getLastCatchDate() != null && user.getLastCatchDate().isEqual(today)) {
 
-                    redirectAttributes.addFlashAttribute("message", "You can only catch one Pokémon per day.");
+                    redirectAttributes.addFlashAttribute("message", "You can only catch one Pokemon per day.");
                     model.addAttribute("pokemon", user.getCurrentPokemon());
 
                     return "redirect:/game/{username}"; 
@@ -137,13 +131,6 @@ public class PokemonController {
 
                 Pokemon currentPokemon = user.getCurrentPokemon();
 
-                if (user.getUniquePokemonSet().contains(currentPokemon)) {
-
-                    redirectAttributes.addFlashAttribute("ownedmessage", "You already caught this Pokémon.");
-
-                    return "redirect:/game/{username}";
-                }
-            
                 if (currentPokemon != null) {
 
                     pokemonSvc.saveCaughtPokemon(currentPokemon, user); 
@@ -156,9 +143,9 @@ public class PokemonController {
                 session.setAttribute("user", user);
 
                 redirectAttributes.addFlashAttribute("caughtPokemon", currentPokemon);
-                redirectAttributes.addFlashAttribute("message", "You caught the Pokémon!"); 
+                redirectAttributes.addFlashAttribute("message", "You caught the Pokemon!"); 
         
-            }
+            
                 return "redirect:/game/{username}";
     
 
@@ -192,7 +179,7 @@ public class PokemonController {
         redisSvc.insertUser(user);
 
         model.addAttribute("pokemon", randomPokemon);
-        model.addAttribute("message", "You re-rolled and got a new Pokémon!");
+        model.addAttribute("message", "You re-rolled and got a new Pokemon!");
 
         return "redirect:/game/{username}";
     }

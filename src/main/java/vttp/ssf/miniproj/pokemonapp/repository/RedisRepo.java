@@ -25,7 +25,6 @@ public class RedisRepo {
     RedisTemplate<String, Object> redisTemplateObj;
 
 
-
     //hset id username fred
     public void insertUser(User user) {
         
@@ -68,7 +67,7 @@ public class RedisRepo {
     }
 
     public boolean isNameUnique(String username) {
-        // Check if a key exists for this username in Redis
+
         return !redisTemplate.hasKey("uniqueusername" + username);
     }
 
