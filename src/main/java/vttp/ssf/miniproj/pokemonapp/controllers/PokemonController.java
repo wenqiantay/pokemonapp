@@ -2,7 +2,6 @@ package vttp.ssf.miniproj.pokemonapp.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -137,15 +136,6 @@ public class PokemonController {
         if (user == null) {
             redirectAttributes.addFlashAttribute("message", "You need to log in to catch Pokemon.");
             return "redirect:/login";
-        }
-
-        //Load the admin account with all the pokemon for testing purposes
-        if (username.equals("Admin")) {
-            List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
-            user.setMyPokemonList(allPokemons);
-            Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
-            user.setUniquePokemonSet(uniquePokemonSet);
-            redisSvc.insertUser(user);
         }
 
         LocalDate today = LocalDate.now();

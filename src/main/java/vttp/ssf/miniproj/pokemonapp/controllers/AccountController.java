@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import vttp.ssf.miniproj.pokemonapp.models.Pokemon;
 import vttp.ssf.miniproj.pokemonapp.models.User;
+import vttp.ssf.miniproj.pokemonapp.services.PokemonService;
 import vttp.ssf.miniproj.pokemonapp.services.RedisService;
 
 @Controller
@@ -30,6 +32,9 @@ public class AccountController {
 
     @Autowired
     RedisService redisSvc;
+
+    @Autowired
+    PokemonService pokemonSvc;
 
     @GetMapping("/create")
     public String getCreate(Model model) {
@@ -70,6 +75,15 @@ public class AccountController {
             bindings.addError(usernameerr);
 
             return "create";
+        }
+
+        //Loads Admin with all the pokemon
+        if ("Admin".equals(username)) {
+        List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
+        user.setMyPokemonList(allPokemons);
+
+        Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
+        user.setUniquePokemonSet(uniquePokemonSet);
         }
 
         redisSvc.insertUser(user);
