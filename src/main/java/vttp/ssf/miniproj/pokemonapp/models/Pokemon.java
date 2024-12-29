@@ -3,13 +3,26 @@ package vttp.ssf.miniproj.pokemonapp.models;
 import java.util.List;
 
 public class Pokemon {
-    
+
     private int pokemonid;
+    
     private String name;
 
     private String sprite;
-    
+
     private List<String> type;
+
+    private String funfact;
+
+    private String evolvesFrom;
+
+    public String getEvolvesFrom() {
+        return evolvesFrom;
+    }
+
+    public void setEvolvesFrom(String evolvesFrom) {
+        this.evolvesFrom = evolvesFrom;
+    }
 
     public int getPokemonid() {
         return pokemonid;
@@ -35,7 +48,6 @@ public class Pokemon {
         this.sprite = sprite;
     }
 
-
     public List<String> getType() {
         return type;
     }
@@ -44,12 +56,18 @@ public class Pokemon {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "Pokemon [pokemonid=" + pokemonid + ", name=" + name + ", sprite=" + sprite + ", type=" + type + "]";
+    public String getFunfact() {
+        return funfact;
     }
 
-   
-    
-    
+    public void setFunfact(String funfact) {
+        this.funfact = funfact;
+    }
+
+    @Override
+    public String toString() {
+        return "Pokemon [pokemonid=" + pokemonid + ", name=" + name + ", sprite=" + sprite + ", type=" + type
+                + ", funfact=" + funfact + ", evolvesFrom=" + evolvesFrom + "]";
+    }
+
 }

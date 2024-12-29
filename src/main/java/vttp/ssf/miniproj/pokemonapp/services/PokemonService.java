@@ -31,26 +31,18 @@ public class PokemonService {
     private final String POKE_API_151 = "https://pokeapi.co/api/v2/pokemon?limit=151";
     private final String POKEMON_KEY = "pokemons";
 
-    //Get Pokemonlist from Redis 
     public List<Pokemon> getPokemonList() {
 
-        List<Pokemon> pokemonList = new LinkedList<>();
+        List<Pokemon> pokemonList = redisRepo.getPokemonList(POKEMON_KEY);
 
-        if (redisRepo.pokemonlistExists(POKEMON_KEY)) {
-
-            return redisRepo.getPokemonList(POKEMON_KEY);
-
+        if (pokemonList == null || pokemonList.isEmpty()) {
+            pokemonList = getPokemonsdata();
         }
 
-        pokemonList = getPokemonsdata();
-
-        redisRepo.savePokemonDatas(POKEMON_KEY, pokemonList);
-
         return pokemonList;
-
     }
 
-    //Getting data from API
+    // Getting data from API
     public List<Pokemon> getPokemonsdata() {
 
         List<Pokemon> pokemonList = new LinkedList<>();
@@ -83,6 +75,11 @@ public class PokemonService {
                 String pokemonData = dataResp.getBody();
 
                 Pokemon pokemon = insertPokemonData(pokemonData);
+                Pokemon detailedPokemon = getPokemonDetails(pokemon.getName());
+
+                pokemon.setEvolvesFrom(detailedPokemon.getEvolvesFrom());
+                pokemon.setFunfact(detailedPokemon.getFunfact());
+
                 pokemonList.add(pokemon);
 
             }
@@ -92,11 +89,13 @@ public class PokemonService {
             e.printStackTrace();
         }
 
+        redisRepo.savePokemonDatas(POKEMON_KEY, pokemonList);
+
         return pokemonList;
 
     }
 
-    //Insert the Pokemon data from API to Pokemon 
+    // Insert the Pokemon data from API to Pokemon
     public Pokemon insertPokemonData(String payload) {
 
         Pokemon pokemon = new Pokemon();
@@ -133,7 +132,53 @@ public class PokemonService {
         return pokemon;
     }
 
-    //Shuffle the pokemon list
+    // Get detailed data for a specific Pokemon by name
+    public Pokemon getPokemonDetails(String pokemonName) {
+        Pokemon pokemon = null;
+
+        String url = "https://pokeapi.co/api/v2/pokemon-species/" + pokemonName;
+
+        RequestEntity<Void> req = RequestEntity
+                .get(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .build();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<String> resp = restTemplate.exchange(req, String.class);
+        String payload = resp.getBody();
+
+        try {
+
+            JsonReader reader = Json.createReader(new StringReader(payload));
+            JsonObject pokemonData = reader.readObject();
+
+            pokemon = new Pokemon();
+
+            if (pokemonData.containsKey("evolves_from_species") && !pokemonData.isNull("evolves_from_species")) {
+                JsonObject evolvesFromSpecies = pokemonData.getJsonObject("evolves_from_species");
+
+                if (evolvesFromSpecies != null) {
+                    pokemon.setEvolvesFrom(evolvesFromSpecies.getString("name"));
+                } else {
+                    pokemon.setEvolvesFrom("-");
+                }
+            }
+
+            JsonArray factsArray = pokemonData.getJsonArray("flavor_text_entries");
+            if (factsArray != null && !factsArray.isEmpty()) {
+                JsonObject obj = factsArray.getJsonObject(0);
+                pokemon.setFunfact(obj.getString("flavor_text"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return pokemon;
+    }
+
+    // Shuffle the pokemon list
     public Pokemon getRandomPokemon() {
 
         List<Pokemon> pokemonList = (List<Pokemon>) redisRepo.getPokemonList(POKEMON_KEY);
@@ -149,7 +194,7 @@ public class PokemonService {
 
     }
 
-    //Catch pokemon and save to redis for user
+    // Catch pokemon and save to redis for user
     public void saveCaughtPokemon(Pokemon pokemon, User user) {
 
         List<Pokemon> myPokemonList = user.getMyPokemonList();
@@ -183,7 +228,7 @@ public class PokemonService {
         redisRepo.insertUser(user);
     }
 
-    //Get UniquePokemonSet from Redis
+    // Get UniquePokemonSet from Redis
     public Set<Pokemon> getUniquePokemonSet() {
 
         Set<Pokemon> uniquePokemonSet = new HashSet<>();
@@ -195,4 +240,21 @@ public class PokemonService {
         return uniquePokemonSet;
     }
 
+    // Get Pokémon details by ID
+    public Pokemon getPokemonDetailsById(int id) {
+
+        List<Pokemon> pokemonList = redisRepo.getPokemonList(POKEMON_KEY);
+
+        if (pokemonList == null || pokemonList.isEmpty()) {
+            pokemonList = getPokemonsdata();
+        }
+
+        for (Pokemon pokemon : pokemonList) {
+            if (pokemon.getPokemonid() == id) {
+                return pokemon;
+            }
+        }
+
+        return null;
+    }
 }

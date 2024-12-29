@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" data-th-href="@{/pokemons.css}">
+    <title>Pokemon Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" data-th-href="@{/pokemondetails.css}">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <title>Pokemons</title>
 </head>
 
 <body
@@ -35,23 +34,46 @@
             </div>
         </div>
     </nav>
-    <h1 class="text-center pokemon-text">151 Kanto Region Pokemon List</h1>
+    <div class="container">
+        <div class="pokemon-details-wrapper">
 
-    <div class="container pokemon-grid">
-        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-            <div data-th-each="pokemon: ${pokemonlist}" class="col">
-                <div class="card pokemon-card">
-                    <a data-th-href="@{/pokemon-details/{pokemonid}(pokemonid=${pokemon.pokemonid})}">
-                        <img data-th-src="${pokemon.sprite}" alt="Sprite of ${pokemon.name}"
-                            class="card-img-top pokemon-img">
-                        <div class="card-body text-center">
-                            <h5 class="pokemon-name"><span data-th-text="${pokemon.name}"></span></h5>
-                        </div>
-                    </a>
-                </div>
+
+            <div class="pokemon-sprite">
+                <img data-th-src="${pokemon.sprite}">
+            </div>
+
+
+            <div class="pokemon-card">
+                <h2 class="pokemon-name"><span data-th-text="${pokemon.name}"></span>
+                    <span class="pokemon-id">#<span data-th-text="${pokemon.pokemonid}"></span></span>
+                </h2>
+
+
+                <p><strong>Types:</strong>
+                    <span class="pokemon-type-container">
+                        <span data-th-each="type : ${pokemon.type}" class="pokemon-type"
+                            th:class="'type-' + ${type.toLowerCase()}" th:text="${type}"></span>
+                    </span>
+                </p>
+
+
+                <p class="pokemon-evolves">
+                    <strong>Evolves from:</strong>
+                    <span data-th-text="${pokemon.evolvesFrom != null ? pokemon.evolvesFrom : 'No evolution'}"
+                        alt="-">No evolution</span>
+                </p>
+
             </div>
         </div>
     </div>
+
+
+    <div class="pokemon-funfact">
+        <p class="pokemon-fact-title text-center"><Strong><u>Pokemon Fact</u></Strong></p>
+        <p><span data-th-text="${pokemon.funfact}"></span></p>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

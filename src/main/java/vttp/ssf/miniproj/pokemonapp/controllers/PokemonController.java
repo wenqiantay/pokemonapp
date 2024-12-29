@@ -2,6 +2,7 @@ package vttp.ssf.miniproj.pokemonapp.controllers;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,7 +38,20 @@ public class PokemonController {
         model.addAttribute("pokemonlist", pokemonList);
 
         return "pokemons";
+    }
 
+    @GetMapping("/pokemon-details/{pokemonid}")
+    public String viewPokemonDetails(@PathVariable int pokemonid, Model model) {
+
+        Pokemon pokemon = pokemonSvc.getPokemonDetailsById(pokemonid);
+
+        if (pokemon == null) {
+            model.addAttribute("error", "Pokémon not found!");
+            return "error";
+        }
+
+        model.addAttribute("pokemon", pokemon);
+        return "pokemondetails";
     }
 
     @GetMapping("/")
@@ -125,6 +139,15 @@ public class PokemonController {
             return "redirect:/login";
         }
 
+        //Load the admin account with all the pokemon for testing purposes
+        if (username.equals("Admin")) {
+            List<Pokemon> allPokemons = pokemonSvc.getPokemonList();
+            user.setMyPokemonList(allPokemons);
+            Set<Pokemon> uniquePokemonSet = pokemonSvc.getUniquePokemonSet();
+            user.setUniquePokemonSet(uniquePokemonSet);
+            redisSvc.insertUser(user);
+        }
+
         LocalDate today = LocalDate.now();
 
         if (user.getLastCatchDate() != null && user.getLastCatchDate().isEqual(today)) {
@@ -169,7 +192,7 @@ public class PokemonController {
 
         boolean rerollAvailable = redisSvc.canReroll(user);
 
-        //Check if user still has reroll chances
+        // Check if user still has reroll chances
         if (rerollAvailable == false) {
 
             model.addAttribute("message", "You can only re-roll 3 times per day.");
