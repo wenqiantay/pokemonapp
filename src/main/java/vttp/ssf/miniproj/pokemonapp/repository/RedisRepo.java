@@ -66,47 +66,52 @@ public class RedisRepo {
     
     }
 
+    //exists username
     public boolean isNameUnique(String username) {
 
         return !redisTemplate.hasKey("uniqueusername" + username);
     }
 
-     
     @SuppressWarnings({ "null", "unchecked" })
     public User getUser(String username, String password){
 
         if (username == null || username.trim().isEmpty()) {
-
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
 
         HashOperations<String, String, Object> hashOps = redisTemplateObj.opsForHash();
 
+        // Retrieve fields from Redis
+        String fullname = (String) hashOps.get(username, "fullname");
+        String email = (String) hashOps.get(username, "email");
+        String gender = (String) hashOps.get(username, "gender");
+        String storedUsername = (String) hashOps.get(username, "username");
+        String storedPassword = (String) hashOps.get(username, "password");
+
+        if (storedUsername == null || storedPassword == null) {
+            return null; 
+        }
+
         User user = new User();
-        user.setFullname(hashOps.get(username, "fullname").toString());
-        user.setEmail(hashOps.get(username, "email").toString());
-        user.setGender(hashOps.get(username, "gender").toString());
-        user.setUsername(hashOps.get(username, "username").toString());
-        user.setPassword(hashOps.get(username, "password").toString());
+        user.setFullname(fullname);
+        user.setEmail(email);
+        user.setGender(gender);
+        user.setUsername(storedUsername);
+        user.setPassword(storedPassword);
 
-        String lastCatchDateString = hashOps.get(username, "lastcatchdate").toString();
-
-        if (lastCatchDateString != null && !lastCatchDateString.isEmpty()) {
+        String lastCatchDateString = (String) hashOps.get(username, "lastcatchdate");
+        if (lastCatchDateString != null && !lastCatchDateString.trim().isEmpty()) {
             user.setLastCatchDate(LocalDate.parse(lastCatchDateString));
         }
-        else {
-            user.setLastCatchDate(null); 
-        }
 
-        String lastRerollDateStr = hashOps.get(username, "lastrerolldate").toString();
-        
-        if (lastRerollDateStr != null && !lastRerollDateStr.isEmpty()) {
+        String lastRerollDateStr = (String) hashOps.get(username, "lastrerolldate");
+        if (lastRerollDateStr != null && !lastRerollDateStr.trim().isEmpty()) {
             user.setLastRerollDate(LocalDate.parse(lastRerollDateStr));
         }
 
-        String rerollCountStr = hashOps.get(username, "rerollcount").toString();
-
-        if (rerollCountStr != null) {
+        Object rerollCountObj = hashOps.get(username, "rerollcount");
+        if (rerollCountObj != null) {
+            String rerollCountStr = rerollCountObj.toString();
             user.setRerollCounter(Integer.parseInt(rerollCountStr));
         }
 
@@ -117,21 +122,15 @@ public class RedisRepo {
 
         Pokemon currentPokemon = (Pokemon) hashOps.get(username, "currentpokemon");
         if (currentPokemon != null) {
-        user.setCurrentPokemon(currentPokemon);
+            user.setCurrentPokemon(currentPokemon);
         }
 
         Set<Pokemon> uniquePokemonSet = (Set<Pokemon>) hashOps.get(username, "uniquepokemonset");
-        if(uniquePokemonSet != null) {
+        if (uniquePokemonSet != null) {
             user.setUniquePokemonSet(uniquePokemonSet);
         }
 
-        if (user.getUsername() == null) {
-           
-            return null; 
-        }
-
         if (!user.getPassword().equals(password)) {
-            
             return null; 
         }
 
@@ -213,6 +212,5 @@ public class RedisRepo {
 
         return pokemonList;
     }
-
 
 }

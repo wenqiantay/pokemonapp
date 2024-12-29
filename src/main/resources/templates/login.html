@@ -12,7 +12,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
       
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <img data-th-src="@{/pikachu.png}" alt="Logo">
                 PokeCatch
             </a>
@@ -37,6 +37,15 @@
     </nav>
     <div class="login-card">
     <h1>Login to your account</h1>
+
+        <div th:if="${loggedinmessage}" class="alert alert-warning text-center">
+            <p th:text="${loggedinmessage}"></p>
+        </div>
+
+        <div th:if="${globalError}" class="alert alert-danger" role="alert">
+            <span th:text="${globalError}"></span>
+        </div>
+    
         <form method="POST" action="/login" data-th-object="${user}">
             <div class="mb-3">
                 <label for="username">Username:</label>

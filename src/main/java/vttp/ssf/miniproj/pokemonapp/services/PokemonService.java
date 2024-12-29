@@ -31,14 +31,15 @@ public class PokemonService {
     private final String POKE_API_151 = "https://pokeapi.co/api/v2/pokemon?limit=151";
     private final String POKEMON_KEY = "pokemons";
 
-    public List<Pokemon> getPokemonList(){
-        
+    //Get Pokemonlist from Redis 
+    public List<Pokemon> getPokemonList() {
+
         List<Pokemon> pokemonList = new LinkedList<>();
 
-        if(redisRepo.pokemonlistExists(POKEMON_KEY)){
+        if (redisRepo.pokemonlistExists(POKEMON_KEY)) {
 
-           return redisRepo.getPokemonList(POKEMON_KEY);
-            
+            return redisRepo.getPokemonList(POKEMON_KEY);
+
         }
 
         pokemonList = getPokemonsdata();
@@ -49,40 +50,41 @@ public class PokemonService {
 
     }
 
-    public List<Pokemon> getPokemonsdata(){
-        
+    //Getting data from API
+    public List<Pokemon> getPokemonsdata() {
+
         List<Pokemon> pokemonList = new LinkedList<>();
 
         RequestEntity<Void> req = RequestEntity
-                                    .get(POKE_API_151)
-                                    .accept(MediaType.APPLICATION_JSON)
-                                    .build();
-        
+                .get(POKE_API_151)
+                .accept(MediaType.APPLICATION_JSON)
+                .build();
+
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<String> resp = restTemplate.exchange(req, String.class);
         String payload = resp.getBody();
-        
+
         try {
 
             JsonReader reader = Json.createReader(new StringReader(payload));
             JsonObject jsonData = reader.readObject();
             JsonArray results = jsonData.getJsonArray("results");
 
-            for(int i = 0; i < results.size(); i++) {
+            for (int i = 0; i < results.size(); i++) {
                 String pokemonUrl = results.getJsonObject(i).getString("url");
 
                 RequestEntity<Void> dataReq = RequestEntity
-                                            .get(pokemonUrl)
-                                            .accept(MediaType.APPLICATION_JSON)
-                                            .build();
-                
+                        .get(pokemonUrl)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .build();
+
                 ResponseEntity<String> dataResp = restTemplate.exchange(dataReq, String.class);
                 String pokemonData = dataResp.getBody();
 
                 Pokemon pokemon = insertPokemonData(pokemonData);
                 pokemonList.add(pokemon);
-                
+
             }
 
         } catch (Exception e) {
@@ -94,49 +96,49 @@ public class PokemonService {
 
     }
 
-    public Pokemon insertPokemonData(String payload){
+    //Insert the Pokemon data from API to Pokemon 
+    public Pokemon insertPokemonData(String payload) {
 
         Pokemon pokemon = new Pokemon();
-        
+
         try {
-            
+
             JsonReader reader = Json.createReader(new StringReader(payload));
             JsonObject pokemonData = reader.readObject();
-            
+
             String pokemonName = pokemonData.getString("name");
             int pokemonId = pokemonData.getInt("order");
             String spritesUrl = pokemonData.getJsonObject("sprites").getString("front_default");
             JsonArray typeArray = pokemonData.getJsonArray("types");
             List<String> typesList = new LinkedList<>();
-            
-            for(int i = 0; i < typeArray.size(); i++) {
+
+            for (int i = 0; i < typeArray.size(); i++) {
                 JsonObject obj = typeArray.getJsonObject(i);
                 String type = obj.getJsonObject("type").getString("name");
-                
+
                 typesList.add(type);
             }
-            
+
             pokemon.setName(pokemonName);
             pokemon.setPokemonid(pokemonId);
             pokemon.setSprite(spritesUrl);
-            pokemon.setType(typesList);       
-            
-            
+            pokemon.setType(typesList);
+
         } catch (Exception e) {
-            
+
             e.printStackTrace();
-            
+
         }
 
         return pokemon;
     }
 
-    //shuffle the pokemon list
-    public Pokemon getRandomPokemon(){
+    //Shuffle the pokemon list
+    public Pokemon getRandomPokemon() {
 
         List<Pokemon> pokemonList = (List<Pokemon>) redisRepo.getPokemonList(POKEMON_KEY);
 
-        if(pokemonList == null || pokemonList.isEmpty()){
+        if (pokemonList == null || pokemonList.isEmpty()) {
 
             return null;
         }
@@ -147,30 +149,30 @@ public class PokemonService {
 
     }
 
-    //catch pokemon and save to redis for user
-    public void saveCaughtPokemon(Pokemon pokemon, User user){
+    //Catch pokemon and save to redis for user
+    public void saveCaughtPokemon(Pokemon pokemon, User user) {
 
         List<Pokemon> myPokemonList = user.getMyPokemonList();
         Set<Pokemon> uniquePokemonSet = user.getUniquePokemonSet();
-    
+
         if (myPokemonList == null) {
             myPokemonList = new LinkedList<>();
         }
 
-        if(uniquePokemonSet == null){
+        if (uniquePokemonSet == null) {
             uniquePokemonSet = new HashSet<>();
         }
-        
+
         boolean isDuplicate = false;
         for (Pokemon existingPokemon : uniquePokemonSet) {
             if (existingPokemon.getPokemonid() == pokemon.getPokemonid()) {
-                isDuplicate = true; 
+                isDuplicate = true;
                 break;
             }
         }
-        
+
         if (!isDuplicate) {
-            uniquePokemonSet.add(pokemon); 
+            uniquePokemonSet.add(pokemon);
         }
 
         myPokemonList.add(pokemon);
@@ -181,7 +183,8 @@ public class PokemonService {
         redisRepo.insertUser(user);
     }
 
-    public Set<Pokemon> getUniquePokemonSet(){
+    //Get UniquePokemonSet from Redis
+    public Set<Pokemon> getUniquePokemonSet() {
 
         Set<Pokemon> uniquePokemonSet = new HashSet<>();
 
@@ -192,5 +195,4 @@ public class PokemonService {
         return uniquePokemonSet;
     }
 
-    
 }

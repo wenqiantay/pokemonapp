@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping
 public class AccountRestController {
 
+    //Logging out from account
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
         

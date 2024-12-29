@@ -14,7 +14,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
       
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <img data-th-src="@{/pikachu.png}" alt="Logo">
                 PokeCatch
             </a>
@@ -90,6 +90,11 @@
         </div>        
     </div>
     <div class="text-center">
+
+        <div th:if="${ownedmessage}" class="alert alert-warning">
+            <span th:text="${ownedmessage}"></span>
+        </div>
+        
         <p class= "message-box success-message" data-th-if="${caughtPokemon}">
             <span>You have caught <span data-th-text="${caughtPokemon.name}"></span></span>
         </p>

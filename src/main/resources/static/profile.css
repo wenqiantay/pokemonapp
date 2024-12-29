@@ -354,14 +354,36 @@ h2, h3 {
 
 .card {
     border: none;
+    
 }
+
 
 .card.bg-info {
     background-color: #17a2b8;
+    width: 300px; 
+    height: 150px; 
+    padding: 20px; 
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; 
+    margin:auto;
 }
 
 .card.bg-success {
     background-color: #28a745;
+    width: 300px; 
+    height: 150px; 
+    padding: 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    overflow: hidden;
+    margin: auto;
 }
 
 .card p {

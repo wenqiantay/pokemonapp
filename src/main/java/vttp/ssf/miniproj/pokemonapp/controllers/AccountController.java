@@ -54,6 +54,7 @@ public class AccountController {
             return "create";
         }
 
+        //Check if confirm password input matches the password
         if(!checkpw.equals(user.getPassword())){
 
             FieldError passworderr = new FieldError("user", "password", "Password does not match" );
@@ -63,6 +64,7 @@ public class AccountController {
             return "create";
         }
 
+        //Check if Username is already taken
         if(!redisSvc.isUsernameUnique(username)){
             FieldError usernameerr = new FieldError("user", "username", "Username is already taken");
 
@@ -73,7 +75,7 @@ public class AccountController {
 
         redisSvc.insertUser(user);
 
-        session.setAttribute("user", user);
+        session.setAttribute("loggedInUser", user);
 
         model.addAttribute("user", user);
         model.addAttribute("checkpw", checkpw);
@@ -99,6 +101,7 @@ public class AccountController {
         String username = user.getUsername();
         String password = user.getPassword();
 
+        //Check if username is empty
         if (username == null || username.trim().isEmpty()) {
             
             FieldError loginErr = new FieldError("user", "username", "Username cannot be empty");
@@ -107,15 +110,18 @@ public class AccountController {
         }
 
         User retrievedUser = redisSvc.getUser(username, password);
-    
+        
+        //Check if the User exist 
         if (retrievedUser == null) {
         
-            FieldError loginErr = new FieldError("user", "username", "Invalid username or password");
+            FieldError loginErr = new FieldError("user", "username", "User does not exist or Invalid password");
             bindings.addError(loginErr);
+
+            model.addAttribute("globalError", "Invalid username or Password.");
             return "login";
         }   
 
-        session.setAttribute("user", retrievedUser);
+        session.setAttribute("loggedInUser", retrievedUser);
 
         model.addAttribute("username", retrievedUser.getUsername());
 
@@ -125,7 +131,7 @@ public class AccountController {
     @GetMapping("/profile/{username}")
     public String getAccountStats(@PathVariable String username, HttpSession session, Model model){
 
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
             return "redirect:/login";
@@ -141,7 +147,7 @@ public class AccountController {
     @PostMapping("/profile/{username}")
     public String postAccountStats(@PathVariable String username, HttpSession session, Model model){
         
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
 
@@ -158,6 +164,7 @@ public class AccountController {
             user.setUniquePokemonSet(new HashSet<>());
         }
 
+        //Sort the pokedex in ascending order with the pokemon Id
         List<Pokemon> sortedUniquePokemonList = new ArrayList<>(user.getUniquePokemonSet());
         sortedUniquePokemonList.sort((pokemon1, pokemon2) -> Integer.compare(pokemon1.getPokemonid(), pokemon2.getPokemonid()));
 

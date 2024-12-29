@@ -20,7 +20,7 @@ public class RedisService {
 
     }
 
-    //check if username is unique
+    //Check if username is unique
     public boolean isUsernameUnique(String username) {
         return redisRepo.isNameUnique(username);
     }
