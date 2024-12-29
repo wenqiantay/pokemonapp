@@ -1,7 +1,10 @@
 package vttp.ssf.miniproj.pokemonapp.controllers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
@@ -48,10 +52,52 @@ public class PokemonController {
             model.addAttribute("error", "Pokémon not found!");
             return "error";
         }
-
         model.addAttribute("pokemon", pokemon);
         return "pokemondetails";
     }
+
+    @GetMapping("/pokemon-profile/{username}")
+    public String viewProfile(@PathVariable String username, Model model, @RequestParam(required = false) String searchTerm) {
+
+        User user = redisSvc.getUserByUsername(username);
+
+        if (user == null) {
+            model.addAttribute("error", "User not found!");
+            return "error";
+        }
+
+        List<Pokemon> caughtPokemonList = user.getMyPokemonList();
+
+        int caughtPokemonCount = caughtPokemonList.size();
+
+       
+        Set<String> uniquePokemonSet = new HashSet<>();
+        for (Pokemon pokemon : caughtPokemonList) {
+            uniquePokemonSet.add(pokemon.getName());
+        }
+        int uniquePokemonCount = uniquePokemonSet.size();
+
+
+        List<Pokemon> filteredPokemonList;
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            filteredPokemonList = pokemonSvc.searchPokemons(user, searchTerm);
+        } else {
+            filteredPokemonList = user.getMyPokemonList(); 
+        }
+
+        List<Pokemon> sortedUniquePokemonList = new ArrayList<>(user.getUniquePokemonSet());
+        sortedUniquePokemonList
+                .sort((pokemon1, pokemon2) -> Integer.compare(pokemon1.getPokemonid(), pokemon2.getPokemonid()));
+        
+        model.addAttribute("user", user);
+        model.addAttribute("filteredPokemonList", filteredPokemonList);
+        model.addAttribute("currentPokemonCount", caughtPokemonCount);
+        model.addAttribute("uniquePokemonCount", uniquePokemonCount);
+        model.addAttribute("sortedUniquePokemonList", sortedUniquePokemonList);
+
+        return "profile";
+    }
+
 
     @GetMapping("/")
     public String indexController(Model model) {

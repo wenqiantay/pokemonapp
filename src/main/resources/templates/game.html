@@ -68,9 +68,15 @@
     <div data-th-obj="${pokemon}" class="text-center">
         <h2><span data-th-text="*{pokemon.name}" class="pokemon-name"></span></h2>
     </div>
-    <div class="text-center" data-th-if="${ownedmessage}">
+    
+     <div data-th-if="${ownedmessage}" class="text-center">
         <div class="alert alert-warning">
             <span data-th-text="${ownedmessage}"></span>
+        </div>
+    </div>
+    <div data-th-if="${notownedmessage}" class="text-center">
+        <div class="alert alert-success">
+            <span data-th-text="${notownedmessage}"></span>
         </div>
     </div>
 
@@ -97,11 +103,6 @@
         </div>
     </div>
     <div class="text-center">
-
-        <div th:if="${ownedmessage}" class="alert alert-warning">
-            <span th:text="${ownedmessage}"></span>
-        </div>
-
         <p class="message-box success-message" data-th-if="${caughtPokemon}">
             <span>You have caught <span data-th-text="${caughtPokemon.name}"></span></span>
         </p>

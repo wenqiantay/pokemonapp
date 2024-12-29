@@ -95,8 +95,14 @@
                 <div id="collapseCurrentSet" class="accordion-collapse collapse show" aria-labelledby="headingOne"
                     data-bs-parent="#pokemonSetsAccordion">
                     <div class="accordion-body">
+                        <div class="mb-3">
+                            <form method="get" data-th-action="@{/pokemon-profile/{username}(username=${user.username})}">
+                                <input type="text" class="form-control" name="searchTerm" placeholder="Search Pokémon" data-th-value="${searchTerm}">
+                                <button type="submit" class="btn btn-primary mt-2">Search</button>
+                            </form>
+                        </div>
                         <div class="pokemon-list">
-                            <div data-th-each="pokemon : ${user.myPokemonList}" class="pokemon-card">
+                            <div data-th-each="pokemon : ${filteredPokemonList}" class="pokemon-card">
                                 <a data-th-href="@{/pokemon-details/{pokemonid}(pokemonid=${pokemon.pokemonid})}"
                                     class="pokemon-card-link">
                                     <img data-th-src="${pokemon.sprite}" alt="Sprite of ${pokemon.name}"
@@ -117,6 +123,7 @@
                 </h2>
                 <div id="collapseUniqueSet" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                     data-bs-parent="#pokemonSetsAccordion">
+
                     <div class="pokemon-list">
                         <div data-th-each="p: ${sortedUniquePokemonList}" class="pokemon-card">
                             <a data-th-href="@{/pokemon-details/{pokemonid}(pokemonid=${p.pokemonid})}"

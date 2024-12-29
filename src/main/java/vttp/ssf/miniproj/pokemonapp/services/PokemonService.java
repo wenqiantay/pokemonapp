@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -257,4 +258,16 @@ public class PokemonService {
 
         return null;
     }
+
+    //Search Pokemon
+    public List<Pokemon> searchPokemons(User user, String searchTerm) {
+
+        List<Pokemon> allPokemon = user.getMyPokemonList();
+
+        // Filter Pokemon by name
+        return allPokemon.stream()
+            .filter(pokemon -> pokemon.getName().toLowerCase().contains(searchTerm.toLowerCase()))
+            .collect(Collectors.toList());
+    }
+
 }
