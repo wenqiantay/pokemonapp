@@ -310,23 +310,34 @@ h1 {
 
 
 .pokemon-funfact {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ADD8E6;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-size: 1.1em;
-    color: #333;
-    text-align: center;
-    width: 100%;                     
-    max-width: 800px;                
-    margin-top: 20px;                
-    box-sizing: border-box;   
-    margin-left: 350px;     
-  } 
+    max-width: 600px;
+    width: 100%;
+}
 
-  .pokemon-funfact .pokemon-fact-title {
-    color:blue
-  }
+.pokemon-fact-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.pokemon-fact-title u {
+    text-decoration: underline;
+}
+
+.pokemon-fact-title strong {
+    font-weight: bold;
+}
+
+.pokemon-funfact p {
+    text-align: center;
+}
 
   
 @media (max-width: 768px) {

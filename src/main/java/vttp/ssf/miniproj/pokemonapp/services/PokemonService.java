@@ -168,8 +168,19 @@ public class PokemonService {
 
             JsonArray factsArray = pokemonData.getJsonArray("flavor_text_entries");
             if (factsArray != null && !factsArray.isEmpty()) {
-                JsonObject obj = factsArray.getJsonObject(0);
-                pokemon.setFunfact(obj.getString("flavor_text"));
+                for (int i = 0; i < factsArray.size(); i++) {
+                    JsonObject obj = factsArray.getJsonObject(i);
+                    String language = obj.getJsonObject("language").getString("name");
+                    if ("en".equals(language)) {  
+                        String rawFact = obj.getString("flavor_text");
+
+                     
+                        String sanitizedFact = rawFact.replaceAll("[\\n\\f]", " ").trim();
+
+                        pokemon.setFunfact(sanitizedFact);
+                        break; 
+                    }
+                }
             }
 
         } catch (Exception e) {
